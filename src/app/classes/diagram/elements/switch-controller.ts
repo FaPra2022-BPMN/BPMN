@@ -2,11 +2,11 @@ import { Diagram } from "../diagram";
 import { Element } from "../element";
 import { Event } from "./event";
 import { Connector } from "./connector";
-import { EinPfeil } from "./EinPfeil";
 import { Gateway } from "./gateway";
 import { GatewayType } from "./gatewaytype";
 import { SwitchstateType } from "./switchstatetype";
 import { EventType } from "./eventtype";
+import { Arrow } from "./arrow/Arrow";
 
 export class SwitchController {
     private _diagram: Diagram | undefined;
@@ -215,7 +215,7 @@ export class SwitchController {
     private getAllElementsBefore(element: Element): Element[] {
         let elements: Element[] = [];
         this._diagram?.elements.forEach(diagramElement => {
-            if (diagramElement instanceof EinPfeil || diagramElement instanceof Connector) {
+            if (diagramElement instanceof Arrow || diagramElement instanceof Connector) {
                 if (diagramElement.end === element) {
                     elements.push(diagramElement.start);
                 }
@@ -231,7 +231,7 @@ export class SwitchController {
     private getAllElementsAfter(element: Element): Element[] {
         let elements: Element[] = [];
         this._diagram?.elements.forEach(diagramElement => {
-            if (diagramElement instanceof EinPfeil || diagramElement instanceof Connector) {
+            if (diagramElement instanceof Arrow || diagramElement instanceof Connector) {
                 if (diagramElement.start === element) {
                     elements.push(diagramElement.end);
                 }
