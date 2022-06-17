@@ -1,7 +1,8 @@
-import { SwitchController } from './switch-controller';
+import { Diagram } from '../diagram';
+import { SwitchController } from './switch-controller'; // import { SwitchController } from './switch-controller';
 
 describe('SwitchController', () => {
   it('should create an instance', () => {
-    expect(new SwitchController()).toBeTruthy();
+    expect(new SwitchController(new Diagram())).toBeTruthy();   
   });
 });

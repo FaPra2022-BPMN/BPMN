@@ -31,8 +31,8 @@ export class ParserService {
         //         result.addElement(this.parseElement(line));
         //     }
         // });
-        //  const result = this.testDiagrammSchaltung();
-        const result = this.testDiagramm();
+         const result = this.testDiagrammSchalten1();
+        //const result = this.testDiagramm();
         const controller = new SwitchController(result);
 
         return result;
@@ -349,6 +349,186 @@ export class ParserService {
 
 
 
+
+
+        return result;
+    }
+
+
+
+
+
+    private testDiagrammSchalten1(): Diagram {
+        var result = new Diagram();
+
+        // Events 
+        let e1 = new Event("e1", "Start 1", EventType.Start);
+        result.addElement(e1);
+
+        let e2 = new Event("e2", "Start 2", EventType.Start);
+        result.addElement(e2);
+
+        let e3 = new Event("e3", "thisIsTheEnd", EventType.End);
+        result.addElement(e3);
+
+        // Gateway
+        let g1 = new Gateway("g1", GatewayType.XOR_JOIN);
+        result.addElement(g1);
+
+        let g2S = new Gateway("g2S", GatewayType.OR_SPLIT);
+        result.addElement(g2S);
+
+        let g2J = new Gateway("g2J", GatewayType.OR_JOIN);
+        result.addElement(g2J);
+
+        let g3S = new Gateway("g3S", GatewayType.XOR_SPLIT);
+        result.addElement(g3S);
+
+        let g3J = new Gateway("g3J", GatewayType.XOR_JOIN);
+        result.addElement(g3J);
+
+        // Task
+        let t1 = new Task("t1", "t1", TaskType.Service);
+        result.addElement(t1);
+
+        let t2 = new Task("t2", "t2", TaskType.Manual);
+        result.addElement(t2);
+
+        let t3 = new Task("t3", "t3", TaskType.Receiving);
+        result.addElement(t3);
+
+        let t4 = new Task("t4", "t4", TaskType.UserTask);
+        result.addElement(t4);
+
+        let t5 = new Task("t5", "t5", TaskType.Sending);
+        result.addElement(t5);
+
+        let t6 = new Task("t6", "t6", TaskType.BusinessRule);
+        result.addElement(t6);
+
+        let t7 = new Task("t7", "t7", TaskType.Manual);
+        result.addElement(t7);
+
+        let t8 = new Task("t8", "t8", TaskType.Receiving);
+        result.addElement(t8);
+
+        let t9 = new Task("t9", "t9", TaskType.Sending);
+        result.addElement(t9);
+
+        // Arrow
+        let p1 = new Arrow("p1", "", e1, t1);
+       // result.addEdge(e1, t1);
+        result.addElement(p1);
+
+        let p2 = new Arrow("p2", "", e2, t2);
+       // result.addEdge(e2, t2);
+        result.addElement(p2);
+
+        let p3 = new Arrow("p3", "", t1, g1);
+       // result.addEdge(t1, g1);
+        result.addElement(p3);
+
+        let p4 = new Arrow("p4", "", t2, g1);
+       // result.addEdge(t2, g1);
+        result.addElement(p4);
+
+
+
+
+
+
+
+        let p5 = new Arrow("p5", "", g1, t3);
+       // result.addEdge(g1, t3);
+        result.addElement(p5);
+
+        let p6 = new Arrow("p6", "", t3, g2S);
+       // result.addEdge(t3, g2S);
+        result.addElement(p6);
+
+        let p7 = new Arrow("p7", "", g2S, t4);
+      //  result.addEdge(g2S, t4);
+        result.addElement(p7);
+
+
+
+
+
+       
+    // ================================================ Alternative Start
+
+    //     let p8 = new Arrow("p8", "", g2S, g3S);
+    //   //  result.addEdge(g2S, g3S);
+    //     result.addElement(p8);
+
+
+    // ================================================ Alternative ODER
+    let t10 = new Task("t10", "t10", TaskType.Service);
+    result.addElement(t10);
+    let p99 = new Arrow("p99", "", g2S, t10);
+    result.addElement(p99);
+    let p100 = new Arrow("p100", "", t10, g3S);
+    result.addElement(p100);
+
+    // ================================================ Alternative Ende
+
+
+        let p9 = new Arrow("p9", "", g3S, t6);
+      //  result.addEdge(g3S, t6);
+        result.addElement(p9);
+
+        let p10 = new Arrow("p10", "", g3S, t8);
+       // result.addEdge(g3S, t8);
+        result.addElement(p10);
+
+        let p11 = new Arrow("p11", "", t4, t5);
+      //  result.addEdge(t4, t5);
+        result.addElement(p11);
+
+        let p12 = new Arrow("p12", "", t6, t7);
+       // result.addEdge(t6, t7);
+        result.addElement(p12);
+
+
+
+
+
+
+        let p13 = new Arrow("p13", "", t8, t9);
+      //  result.addEdge(t8, t9);
+        result.addElement(p13);
+
+        let p14 = new Arrow("p14", "", t7, g3J);
+       // result.addEdge(t7, g3J);
+        result.addElement(p14);
+
+        let p15 = new Arrow("p15", "", t9, g3J);
+       // result.addEdge(t9, g3J);
+        result.addElement(p15);
+
+        let p16 = new Arrow("p16", "", t5, g2J);
+       // result.addEdge(t5, g2J);
+        result.addElement(p16);
+
+
+
+
+
+
+        let p17 = new Arrow("p17", "", g3J, g2J);
+        //result.addEdge(g3J, g2J);
+        result.addElement(p17);
+
+        let p18 = new Arrow("p18", "", g2J, e3);
+        //result.addEdge(g2J, e3);
+        result.addElement(p18);
+
+
+
+
+        // let connector4: Connector = new Connector("A4", "", Connectortype.InformationFlow, elementE2, elementT3);
+        // result.addEdge(elementE2, elementT3);
+        // result.addElement(connector4);
 
 
         return result;
