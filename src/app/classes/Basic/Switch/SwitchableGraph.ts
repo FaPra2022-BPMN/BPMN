@@ -1,3 +1,4 @@
+import { DisplayErrorService } from 'src/app/services/display-error.service';
 import { BpmnEdge } from '../Bpmn/BpmnEdge/BpmnEdge';
 import { BpmnGraph } from '../Bpmn/BpmnGraph';
 import { BpmnNode } from '../Bpmn/BpmnNode';
@@ -19,10 +20,10 @@ export class SwitchableGraph implements GetSvgManager {
     private _switchNodes: SwitchableNode[] = []
     private _controller: SwitchController;
 
-    constructor(bpmnGraph: BpmnGraph) {
+    constructor(bpmnGraph: BpmnGraph, errService : DisplayErrorService | null) {
 
         //controls how nodes are switched
-        this._controller = new SwitchController(this);
+        this._controller = new SwitchController(this, errService);
 
         bpmnGraph.edges.forEach((bpmnEdge: BpmnEdge) => {
             let switchEdge: SwitchableEdge = new SwitchableEdge(bpmnEdge);

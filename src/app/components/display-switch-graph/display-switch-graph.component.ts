@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, Vie
 import { Subscription } from 'rxjs';
 import { BpmnGraph } from 'src/app/classes/Basic/Bpmn/BpmnGraph';
 import { SwitchableGraph } from 'src/app/classes/Basic/Switch/SwitchableGraph';
+import { DisplayErrorService } from 'src/app/services/display-error.service';
 import { DisplayService } from 'src/app/services/display.service';
 import { LayoutService } from 'src/app/services/layout.service';
 import { SvgService } from 'src/app/services/svg.service';
@@ -22,7 +23,8 @@ export class DisplaySwitchGraphComponent implements OnDestroy, AfterViewInit {
   constructor(
     private _layoutService: LayoutService,
     private _svgService: SvgService,
-    private _displayService: DisplayService
+    private _displayService: DisplayService,
+    private _displayErrService: DisplayErrorService
   ) { }
 
   ngAfterViewInit(): void {
@@ -41,7 +43,7 @@ export class DisplaySwitchGraphComponent implements OnDestroy, AfterViewInit {
 
       this._layoutService.setViewBox(this.drawingArea.nativeElement)
 
-      const switchGraph = new SwitchableGraph(graph);
+      const switchGraph = new SwitchableGraph(graph, this._displayErrService);
 
       this.draw(switchGraph.svgManager.getSvg())
 

@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {ErrorHintComponent} from "../components/error-hint/error-hint.component";
+import { Injectable } from '@angular/core';
+import { ErrorHintComponent } from "../components/error-hint/error-hint.component";
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +10,13 @@ export class DisplayErrorService {
     displayError(msg: string) {
         if (this.errorHint !== undefined) {
             this.errorHint.setMessage(msg);
+        }
+    }
+
+
+    removeError() {
+        if (this.errorHint !== undefined) {
+            this.errorHint.removeMessage()
         }
     }
 }

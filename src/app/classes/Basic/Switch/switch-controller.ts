@@ -3,14 +3,17 @@ import { SwitchableNode } from "./SwitchableNode";
 import { SwitchableGraph } from "./SwitchableGraph";
 import { SwitchableGateway } from "./SwitchableGateway";
 import { SwitchUtils } from "./SwitchUtils";
+import { DisplayErrorService } from "src/app/services/display-error.service";
 
 export class SwitchController {
     private _startEvents: SwitchableNode[];
     private nodes: SwitchableNode[];
+    private errService: DisplayErrorService | null;
 
-    constructor(graph: SwitchableGraph) {
+    constructor(graph: SwitchableGraph, errService: DisplayErrorService | null) {
         this._startEvents = [];
         this.nodes = graph.switchNodes
+        this.errService = errService
     }
 
     /**
@@ -35,7 +38,8 @@ export class SwitchController {
      * @param clickedNode the clicked node 
      */
     public press(clickedNode: SwitchableNode) {
-        if (clickedNode.switchState === SwitchState.enableable) {
+        this.removeErrHint()
+        if (clickedNode.enableable()) {
             console.log("Clicked element " + clickedNode.id);
             if (clickedNode.isStartEvent()) this.disableAllOtherStartEvents(clickedNode);
             let nodesToSwitch: SwitchableNode[] = this.getNodesToSwitch(clickedNode)
@@ -44,11 +48,30 @@ export class SwitchController {
             nodesToSwitch.forEach(node => { if (this.possibleToSwitchNode(node)) node.switch() });
             this.checkAllEnableableNodesStillEnableable();
         } else {
-            console.log("The state of this element can not be switched: " + clickedNode.id);
-            if (clickedNode.enabled() && clickedNode.isEndEvent()) {
+
+            if (clickedNode.enabled() && clickedNode.isEndEvent())
                 this.newGame();
-            }
+            else
+                this.displayErrHint(clickedNode)
         }
+    }
+
+    /**
+     * removes error box displayed for the previously clicked node
+     */
+    removeErrHint() {
+        if (this.errService !== null)
+            this.errService.removeError()
+    }
+
+    /**
+     * displays error box if the clicked node can not be switched
+     * @param clickedNode 
+     */
+    displayErrHint(clickedNode: SwitchableNode) {
+        if (this.errService !== null)
+            this.errService.displayError("Element " + clickedNode.id + " is " + SwitchState[clickedNode.switchState] +
+                " and can not be switched. Only YELLOW elements can be switched!");
     }
 
     /**
@@ -63,15 +86,15 @@ export class SwitchController {
         SwitchUtils.addItem(clickedNode, nodesToSwitch);
 
         // if no nodes before the clicked one
-        if(clickedNode.predecessors.length === 0)
-          return SwitchUtils.addItems(clickedNode.switchRegular(), nodesToSwitch);
+        if (clickedNode.predecessors.length === 0)
+            return SwitchUtils.addItems(clickedNode.switchRegular(), nodesToSwitch);
 
         // if there is enabled gateway before the clicked node 
         clickedNode.predecessors.forEach(before => {
             if (before.enabled() && before.isGateway()) {
                 let gatewayConnections = (before as SwitchableGateway).switchSplit(clickedNode);
                 SwitchUtils.addItems(gatewayConnections, nodesToSwitch)
-            }else
+            } else
                 SwitchUtils.addItems(clickedNode.switchRegular(), nodesToSwitch);
         });
 
