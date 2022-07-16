@@ -1,10 +1,11 @@
-import { BpmnEdge } from "../Basic/Bpmn/BpmnEdge/BpmnEdge";
 import { BpmnNode } from "../Basic/Bpmn/BpmnNode";
+import { BpmnEventEnd } from "../Basic/Bpmn/events/BpmnEventEnd";
 import { BpmnGatewayJoinXor } from "../Basic/Bpmn/gateways/BpmnGatewayJoinXor";
 import { BpmnGatewaySplitXor } from "../Basic/Bpmn/gateways/BpmnGatewaySplitXor";
 import { Arc } from "./arc";
 import { Place } from "./place";
 import { PlaceCounter } from "./place-counter";
+import { PnEndEvent } from "./pn-endevent";
 import { PnSubnet } from "./pn-subnet";
 import { PnXorJoin } from "./pn-xor-join";
 import { PnXorSplit } from "./pn-xor-split";
@@ -13,11 +14,23 @@ import { Transition } from "./transition";
 export class Petrinet {
 
     subnets: Array<PnSubnet>
-    
-    
-    constructor() {
+
+    constructor(bpmnNodes: Array<BpmnNode>) {
         this.subnets = new Array<PnSubnet>()
         PlaceCounter.reset()
+
+        for (let bpmnNode of bpmnNodes)
+            this.addNodes(bpmnNode);
+
+        this.addEndPlaces()
+    }
+
+    addEndPlaces() {
+        for (let subnet of this.subnets)
+            if (subnet.isEndEvent()) {
+                let endSubnet: PnEndEvent = subnet as PnEndEvent;
+                endSubnet.addEndPlace();
+            }
 
     }
 
@@ -78,17 +91,17 @@ export class Petrinet {
         return transitions
     }
     public addNodes(bpmnNode: BpmnNode): void {
-        for(let outEdge of bpmnNode.outEdges){
+        for (let outEdge of bpmnNode.outEdges) {
             let before: PnSubnet = this.add(bpmnNode);
             let after: PnSubnet = this.add(outEdge.to);
-            
+
             this.connectSubnets(before, after);
         }
 
-        
+
     }
 
-    private connectSubnets(before: PnSubnet, after: PnSubnet): void{
+    private connectSubnets(before: PnSubnet, after: PnSubnet): void {
         let input_place_for_after: Place = after.addInputPlace(before)
         before.addArcTo(input_place_for_after);
     }
@@ -102,12 +115,13 @@ export class Petrinet {
         return subnet!;
     }
 
-    private createPnSubnet(bpmnNode: BpmnNode): PnSubnet{
+    private createPnSubnet(bpmnNode: BpmnNode): PnSubnet {
         if (bpmnNode instanceof BpmnGatewaySplitXor)
             return new PnXorSplit(bpmnNode);
         if (bpmnNode instanceof BpmnGatewayJoinXor)
             return new PnXorJoin(bpmnNode);
-
+        if (bpmnNode instanceof BpmnEventEnd)
+            return new PnEndEvent(bpmnNode);
         return new PnSubnet(bpmnNode)
     }
     private getSubnet(newNode: BpmnNode): PnSubnet | undefined {

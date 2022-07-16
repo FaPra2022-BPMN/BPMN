@@ -35,8 +35,7 @@ export class PnSubnet {
         if (bpmnNode instanceof BpmnEventStart)
             this.addStartPlace()
 
-        if (bpmnNode instanceof BpmnEventEnd)
-            this.addEndPlace()
+
 
     }
 
@@ -47,9 +46,8 @@ export class PnSubnet {
 
     }
 
-    private addEndPlace(): void {
-        let endPlace: Place = this.addPlace(Place.create({ isStartPlace: false }))
-        this.addArc(Arc.create(this.transition, endPlace))
+    public isEndEvent(): boolean {
+        return this.bpmnNode instanceof BpmnEventEnd
     }
 
     public get transition(): Transition {
@@ -83,13 +81,12 @@ export class PnSubnet {
     }
 
     findNotConnectedTransition(): Transition | null {
-        console.log("XOR SPLIT " + this.transitions.length)
-        for (let trans of this.transitions){
-            console.log(trans._id)
+
+        for (let trans of this.transitions) {
+
             if (!trans.isConnected())
-            return trans;
+                return trans;
         }
-           
 
         return null;
     }

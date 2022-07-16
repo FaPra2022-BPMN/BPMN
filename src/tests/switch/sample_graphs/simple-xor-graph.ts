@@ -18,31 +18,31 @@ export class SimpleXorGraph extends TestGraph{
          //startEvent --> Task1
          let startEvent = this.createNode(new BpmnEventStart("StartEv"), "StartEv");
          let task1 = this.createNode(new BpmnTaskService("Task1"), "ServiceTask");
-         this.graph.addEdge(new BpmnEdge("1",startEvent, task1));
+         this.graph.addEdge(new BpmnEdge(this.edge_idx,startEvent, task1));
  
          //Task1 --> SPLIT_XOR gateway
          let gatewaySplitXor = this.createNode(new BpmnGatewaySplitXor("XOR-Split"), "XOR-Split");
-         this.graph.addEdge(new BpmnEdge("2", task1, gatewaySplitXor));
+         this.graph.addEdge(new BpmnEdge(this.edge_idx, task1, gatewaySplitXor));
        
  
          //SPLIT_XOR gateway --> Task2
          let task2 = this.createNode(new BpmnTaskManual("Task2"), "ManualTask");
-         this.graph.addEdge(new BpmnEdge("3", gatewaySplitXor, task2));
+         this.graph.addEdge(new BpmnEdge(this.edge_idx, gatewaySplitXor, task2));
  
          //SPLIT_XOR gateway --> Task3
          let task3 = this.createNode(new BpmnTaskUserTask("Task3"), "UserTask");
-         this.graph.addEdge(new BpmnEdge("4", gatewaySplitXor, task3));
+         this.graph.addEdge(new BpmnEdge(this.edge_idx, gatewaySplitXor, task3));
  
          //Task2 --> JOIN_XOR gateway
          let gatewayJoinXor = this.createNode(new BpmnGatewayJoinXor("XOR-Join"), "XOR-Join");
-         this.graph.addEdge(new BpmnEdge("5", task2, gatewayJoinXor));
+         this.graph.addEdge(new BpmnEdge(this.edge_idx, task2, gatewayJoinXor));
  
          //Task3 --> JOIN_XOR gateway
-         this.graph.addEdge(new BpmnEdge("6", task3, gatewayJoinXor));
+         this.graph.addEdge(new BpmnEdge(this.edge_idx, task3, gatewayJoinXor));
  
          //JOIN_XOR gateway --> EndEvent
          let endEvent = this.createNode(new BpmnEventEnd("EndEv"), "End");
-         this.graph.addEdge(new BpmnEdge("7", gatewayJoinXor, endEvent));
+         this.graph.addEdge(new BpmnEdge(this.edge_idx, gatewayJoinXor, endEvent));
 
     }
    static create():BpmnGraph{     

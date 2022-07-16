@@ -10,10 +10,7 @@ export class PetrinetService {
 
 
   public convert(diagram: BpmnGraph): string {
-    let petri: Petrinet = new Petrinet();
-
-    for (let bpmnNode of diagram.nodes) 
-      petri.addNodes(bpmnNode);
+    let petri: Petrinet = new Petrinet(diagram.nodes);
 
     return petri.print();
   }

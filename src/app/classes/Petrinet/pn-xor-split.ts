@@ -11,7 +11,6 @@ export class PnXorSplit extends PnSubnet {
         super(bpmnNode);
 
         //create as many transitions as there are outgoing edges
-        console.log("OUT XOR SPLIT " + bpmnNode.outEdges.length)
         while (this.transitions.length != bpmnNode.outEdges.length)
             this.addTransition(new Transition(bpmnNode.id + this.transitions.length, bpmnNode.label))
     }

@@ -5,6 +5,8 @@
     <a href="https://www.fernuni-hagen.de/ilovepetrinets/"><h1>I <span class="red">❤</span> Petri Nets</h1></a>
     <h2>Subtitle</h2>
     <app-mode-switch></app-mode-switch>
+    
+   
     <!--    Main content    -->
     <div [ngSwitch]="mode">
         <app-display-draggable-graph *ngSwitchCase="'free dragging'"
@@ -14,6 +16,7 @@
         <app-display-switch-graph *ngSwitchCase="'switch diagram'"
         class="padding full-size"></app-display-switch-graph>
     </div>
+    
     <div fxLayout="row" fxLayoutAlign="space-evenly start">
         <input-field buttonText="File upload" buttonIcon="publish" (newInputEvent)="textareaFc.setValue($event)"></input-field>
         <mat-form-field appearance="outline"
@@ -26,16 +29,17 @@
                       [formControl]="textareaFc"></textarea>
         </mat-form-field>
         <output-field buttonText="File download" buttonIcon="download" [text]="textareaFc.value"></output-field>
+       
+        <mat-card>
+            <mat-card-title>Petri</mat-card-title>
+            <mat-card-content [innerText]="petritext"></mat-card-content>
+        </mat-card>
         <mat-form-field appearance="fill">
             <mat-label>Diagram</mat-label>
             <mat-select (selectionChange)="selectDiagram($event)">
                 <mat-option *ngFor="let diagram of diagrams" [value]="diagram">{{diagram}}</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-card>
-            <mat-card-title>Petri</mat-card-title>
-            <mat-card-content [innerText]="petritext"></mat-card-content>
-        </mat-card>
     </div>
 
     <!--  Footer  -->
