@@ -8,6 +8,7 @@ import { PetrinetService } from './services/petrinet.service';
 import { SimpleAndGraph } from 'src/tests/switch/sample_graphs/simple-and-graph';
 import { SimpleGraph } from './classes/Sugiyama/SimpleGraph';
 import { SimpleGraphNoGateways } from 'src/tests/switch/sample_graphs/simple-graph-no-gateways';
+import { SimpleXorGraph } from 'src/tests/switch/sample_graphs/simple-xor-graph';
 
 
 
@@ -64,7 +65,7 @@ export class AppComponent implements OnDestroy {
         switch (event.value) {
             case "default": { result = SimpleGraphNoGateways.create(); break; }
             case "AND": { result = SimpleAndGraph.create(); break; }
-            case "XOR": { result = SimpleAndGraph.create(); break; }
+            case "XOR": { result = SimpleXorGraph.create(); break; }
         }
 
         //this.textareaFc.setValue(text)

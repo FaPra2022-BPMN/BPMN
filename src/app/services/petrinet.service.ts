@@ -12,8 +12,8 @@ export class PetrinetService {
   public convert(diagram: BpmnGraph): string {
     let petri: Petrinet = new Petrinet();
 
-    for (let edge of diagram.edges) 
-      petri.addNodes(edge);
+    for (let bpmnNode of diagram.nodes) 
+      petri.addNodes(bpmnNode);
 
     return petri.print();
   }

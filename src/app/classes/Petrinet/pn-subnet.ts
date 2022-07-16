@@ -2,9 +2,13 @@ import { BpmnNode } from "../Basic/Bpmn/BpmnNode";
 import { BpmnEventEnd } from "../Basic/Bpmn/events/BpmnEventEnd";
 import { BpmnEventStart } from "../Basic/Bpmn/events/BpmnEventStart";
 import { BpmnGatewayJoinAnd } from "../Basic/Bpmn/gateways/BpmnGatewayJoinAnd";
+import { BpmnGatewayJoinXor } from "../Basic/Bpmn/gateways/BpmnGatewayJoinXor";
+import { BpmnGatewaySplitXor } from "../Basic/Bpmn/gateways/BpmnGatewaySplitXor";
 import { Arc } from "./arc";
 import { Place } from "./place";
 import { PnElement } from "./pn-element";
+import { PnXorJoin } from "./pn-xor-join";
+import { PnXorSplit } from "./pn-xor-split";
 import { Transition } from "./transition";
 
 export class PnSubnet {
@@ -16,7 +20,7 @@ export class PnSubnet {
     _arcs: Array<Arc>;
 
     _transition: Transition
-    
+
 
     constructor(public bpmnNode: BpmnNode) {
 
@@ -28,17 +32,24 @@ export class PnSubnet {
 
         this._transition = this.addTransition(new Transition(bpmnNode.id, bpmnNode.label))
 
+        if (bpmnNode instanceof BpmnEventStart)
+            this.addStartPlace()
 
-        if (bpmnNode instanceof BpmnEventStart) {
-            let place = this.addPlace(Place.create({isStartPlace: true}));
-            this.addArc(Arc.create(place, this.transition))
-        }
+        if (bpmnNode instanceof BpmnEventEnd)
+            this.addEndPlace()
 
-        if (bpmnNode instanceof BpmnEventEnd) {
-            let endPlace: Place = this.addPlace(Place.create({isStartPlace: false}))
-            this.addArc(Arc.create(this.transition, endPlace))
-        }
+    }
 
+    private addStartPlace(): void {
+
+        let place = this.addPlace(Place.create({ isStartPlace: true }));
+        this.addArc(Arc.create(place, this.transition))
+
+    }
+
+    private addEndPlace(): void {
+        let endPlace: Place = this.addPlace(Place.create({ isStartPlace: false }))
+        this.addArc(Arc.create(this.transition, endPlace))
     }
 
     public get transition(): Transition {
@@ -50,6 +61,11 @@ export class PnSubnet {
             this.arcs.push(arc)
 
         return arc
+    }
+
+    addArcTo(to: PnElement) {
+        let arc: Arc = Arc.create(this.transition, to);
+        this.addArc(arc);
     }
 
     addPlace(place: Place): Place {
@@ -66,6 +82,18 @@ export class PnSubnet {
         return trans
     }
 
+    findNotConnectedTransition(): Transition | null {
+        console.log("XOR SPLIT " + this.transitions.length)
+        for (let trans of this.transitions){
+            console.log(trans._id)
+            if (!trans.isConnected())
+            return trans;
+        }
+           
+
+        return null;
+    }
+
     public get places(): Array<Place> {
         return this._places;
     }
@@ -77,10 +105,10 @@ export class PnSubnet {
         return this._arcs;
     }
 
-    addInputPlace(subnetBefore: PnSubnet): Place{
-        let inputPlace: Place = this.addPlace(Place.create({isStartPlace: false}));
+    addInputPlace(subnetBefore: PnSubnet): Place {
+        let inputPlace: Place = this.addPlace(Place.create({ isStartPlace: false }));
         this.addArc(Arc.create(inputPlace, this.transition))
-        
+
         return inputPlace;
     }
 

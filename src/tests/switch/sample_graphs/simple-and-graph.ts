@@ -32,7 +32,7 @@ export class SimpleAndGraph extends TestGraph{
          this.graph.addEdge(new BpmnEdge("4", gatewaySplitAnd1, task3));
  
          //Task2 --> JOIN_AND gateway
-         let gatewayJoinAnd = this.createNode(new BpmnGatewayJoinAnd("JoinAnd"), "JoinAnd");
+         let gatewayJoinAnd = this.createNode(new BpmnGatewayJoinAnd("AndJoin"), "AndJoin");
          this.graph.addEdge(new BpmnEdge("5", task2, gatewayJoinAnd));
  
          //Task3 --> JOIN_AND gateway
