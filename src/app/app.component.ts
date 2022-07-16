@@ -5,6 +5,9 @@ import { DisplayService } from './services/display.service';
 import { debounceTime, Subscription } from 'rxjs';
 import { BpmnGraph } from './classes/Basic/Bpmn/BpmnGraph';
 import { PetrinetService } from './services/petrinet.service';
+import { SimpleAndGraph } from 'src/tests/switch/sample_graphs/simple-and-graph';
+import { SimpleGraph } from './classes/Sugiyama/SimpleGraph';
+import { SimpleGraphNoGateways } from 'src/tests/switch/sample_graphs/simple-graph-no-gateways';
 
 
 
@@ -48,6 +51,8 @@ export class AppComponent implements OnDestroy {
             result = this._parserService.parse(this.default());
 
         }
+
+        result = SimpleGraphNoGateways.create()
         this._displayService.display(result!);
         this.petritext = this._petrinetService.convert(result!);
     }
@@ -55,14 +60,16 @@ export class AppComponent implements OnDestroy {
     public selectDiagram(event: any) {
 
         let text: string = "";
+        let result: BpmnGraph;
         switch (event.value) {
-            case "default": { text = this.default(); break; }
-            case "AND": { text = this.AND(); break; }
-            case "XOR": { text = this.default(); break; }
+            case "default": { result = SimpleGraphNoGateways.create(); break; }
+            case "AND": { result = SimpleAndGraph.create(); break; }
+            case "XOR": { result = SimpleAndGraph.create(); break; }
         }
 
-        this.textareaFc.setValue(text)
-
+        //this.textareaFc.setValue(text)
+        this._displayService.display(result!);
+        this.petritext = this._petrinetService.convert(result!);
 
     }
 
