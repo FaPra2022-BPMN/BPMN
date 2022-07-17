@@ -1,17 +1,15 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ParserService } from './services/parser.service';
-import { DisplayService } from './services/display.service';
 import { debounceTime, Subscription } from 'rxjs';
-import { BpmnGraph } from './classes/Basic/Bpmn/BpmnGraph';
-import { PetrinetService } from './services/petrinet.service';
+import { AndGraphThreeLevelsWithEvents } from 'src/tests/switch/sample_graphs/and-graph-three-levels-with-events';
 import { SimpleAndGraph } from 'src/tests/switch/sample_graphs/simple-and-graph';
-import { SimpleGraph } from './classes/Sugiyama/SimpleGraph';
 import { SimpleGraphNoGateways } from 'src/tests/switch/sample_graphs/simple-graph-no-gateways';
 import { SimpleXorGraph } from 'src/tests/switch/sample_graphs/simple-xor-graph';
-import { AndGraphThreeLevelsWithEvents } from 'src/tests/switch/sample_graphs/and-graph-three-levels-with-events';
-
-
+import { XorGraphWithNestedAnd } from 'src/tests/switch/sample_graphs/xor-graph-with-nested-and';
+import { BpmnGraph } from './classes/Basic/Bpmn/BpmnGraph';
+import { DisplayService } from './services/display.service';
+import { ParserService } from './services/parser.service';
+import { PetrinetService } from './services/petrinet.service';
 
 
 @Component({
@@ -25,7 +23,7 @@ export class AppComponent implements OnDestroy {
     public textareaFc: FormControl;
     private _sub: Subscription;
     public petritext: string = "";
-    diagrams: Array<string> = ["NO_GATEWAY", "AND_BASIC", "XOR_BASIC", "AND_3LEVEL"];
+    diagrams: Array<string> = ["NO_GATEWAY", "AND_BASIC", "XOR_BASIC", "AND_3LEVEL", "XOR_NESTED_AND"];
 
 
     constructor(
@@ -68,6 +66,7 @@ export class AppComponent implements OnDestroy {
             case "AND_BASIC": { result = SimpleAndGraph.create(); break; }
             case "XOR_BASIC": { result = SimpleXorGraph.create(); break; }
             case "AND_3LEVEL": { result = AndGraphThreeLevelsWithEvents.create(); break; }
+            case "XOR_NESTED_AND": {result =  XorGraphWithNestedAnd.create(); break; }
         }
 
         //this.textareaFc.setValue(text)
