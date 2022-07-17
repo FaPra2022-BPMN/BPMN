@@ -1,7 +1,4 @@
 import { PnElement } from "./pn-element";
-import { Petrinet } from "./petrinet";
-import { Place } from "./place";
-import { Transition } from "./transition";
 
 export class Arc {
     _id: string = "";
@@ -21,6 +18,6 @@ export class Arc {
 
     print(): string {
 
-        return this._from._id + " " + this._to._id + " " + this._weight
+        return this._from.id + " " + this._to.id + " " + this._weight
     }
 }

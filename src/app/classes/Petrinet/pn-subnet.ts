@@ -13,13 +13,12 @@ import { Transition } from "./transition";
 
 export class PnSubnet {
     id: string;
-
+    _inputPlace: Place;
+    _transition: Transition
 
     _transitions: Array<Transition>;
     _places: Array<Place>;
     _arcs: Array<Arc>;
-
-    _transition: Transition
 
 
     constructor(public bpmnNode: BpmnNode) {
@@ -29,21 +28,13 @@ export class PnSubnet {
         this._places = new Array<Place>();
         this._arcs = new Array<Arc>();
 
-
         this._transition = this.addTransition(new Transition(bpmnNode.id, bpmnNode.label))
-
-        if (bpmnNode instanceof BpmnEventStart)
-            this.addStartPlace()
-
-
-
+        this._inputPlace = this.addInputPlace();
+        this.addArc(Arc.create(this._inputPlace, this.transition))
     }
 
-    private addStartPlace(): void {
-
-        let place = this.addPlace(Place.create({ isStartPlace: true }));
-        this.addArc(Arc.create(place, this.transition))
-
+    get inputPlace(): Place{
+        return this._inputPlace
     }
 
     public isEndEvent(): boolean {
@@ -57,7 +48,7 @@ export class PnSubnet {
     addArc(arc: Arc): Arc {
         if (!this.arcs.includes(arc))
             this.arcs.push(arc)
-
+        
         return arc
     }
 
@@ -80,12 +71,23 @@ export class PnSubnet {
         return trans
     }
 
+    findNotConnectedInputPlace(): Place | null {
+
+        for (let place of this.places) {
+            
+            if (!place.isConnected())
+                return place;
+        }
+
+        return null;
+    }
+
     findNotConnectedTransition(): Transition | null {
 
-        for (let trans of this.transitions) {
+        for (let transition of this.transitions) {
 
-            if (!trans.isConnected())
-                return trans;
+            if (!transition.isConnected())
+                return transition;
         }
 
         return null;
@@ -102,11 +104,8 @@ export class PnSubnet {
         return this._arcs;
     }
 
-    addInputPlace(subnetBefore: PnSubnet): Place {
-        let inputPlace: Place = this.addPlace(Place.create({ isStartPlace: false }));
-        this.addArc(Arc.create(inputPlace, this.transition))
-
-        return inputPlace;
+    addInputPlace(): Place {
+        return this.addPlace(Place.create({ isStartPlace: false }));
     }
 
 }

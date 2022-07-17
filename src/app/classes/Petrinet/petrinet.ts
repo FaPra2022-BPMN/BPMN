@@ -1,11 +1,15 @@
 import { BpmnNode } from "../Basic/Bpmn/BpmnNode";
 import { BpmnEventEnd } from "../Basic/Bpmn/events/BpmnEventEnd";
+import { BpmnEventStart } from "../Basic/Bpmn/events/BpmnEventStart";
+import { BpmnGatewayJoinAnd } from "../Basic/Bpmn/gateways/BpmnGatewayJoinAnd";
 import { BpmnGatewayJoinXor } from "../Basic/Bpmn/gateways/BpmnGatewayJoinXor";
 import { BpmnGatewaySplitXor } from "../Basic/Bpmn/gateways/BpmnGatewaySplitXor";
 import { Arc } from "./arc";
 import { Place } from "./place";
 import { PlaceCounter } from "./place-counter";
+import { PnAndJoin } from "./pn-and-join";
 import { PnEndEvent } from "./pn-endevent";
+import { PnStartEvent } from "./pn-startevent";
 import { PnSubnet } from "./pn-subnet";
 import { PnXorJoin } from "./pn-xor-join";
 import { PnXorSplit } from "./pn-xor-split";
@@ -21,16 +25,6 @@ export class Petrinet {
 
         for (let bpmnNode of bpmnNodes)
             this.addNodes(bpmnNode);
-
-        this.addEndPlaces()
-    }
-
-    addEndPlaces() {
-        for (let subnet of this.subnets)
-            if (subnet.isEndEvent()) {
-                let endSubnet: PnEndEvent = subnet as PnEndEvent;
-                endSubnet.addEndPlace();
-            }
 
     }
 
@@ -102,8 +96,7 @@ export class Petrinet {
     }
 
     private connectSubnets(before: PnSubnet, after: PnSubnet): void {
-        let input_place_for_after: Place = after.addInputPlace(before)
-        before.addArcTo(input_place_for_after);
+        before.addArcTo(after.inputPlace);
     }
 
     private add(bpmnNode: BpmnNode): PnSubnet {
@@ -122,6 +115,12 @@ export class Petrinet {
             return new PnXorJoin(bpmnNode);
         if (bpmnNode instanceof BpmnEventEnd)
             return new PnEndEvent(bpmnNode);
+
+        if (bpmnNode instanceof BpmnEventStart)
+            return new PnStartEvent(bpmnNode);
+
+        if (bpmnNode instanceof BpmnGatewayJoinAnd)
+            return new PnAndJoin(bpmnNode);
         return new PnSubnet(bpmnNode)
     }
     private getSubnet(newNode: BpmnNode): PnSubnet | undefined {

@@ -10,20 +10,20 @@ export class PnXorJoin extends PnSubnet {
         super(bpmnNode);
 
         //create as many transitions as there are incoming edges
-        while (this.transitions.length != bpmnNode.inEdges.length)
-            this.addTransition(new Transition(`${bpmnNode.id}${this.transitions.length + 1}`, bpmnNode.label))
-
+        //for every transition - add incoming place
+        while (this.transitions.length != bpmnNode.inEdges.length){
+            let trans = this.addTransition(new Transition(`${bpmnNode.id}${this.transitions.length + 1}`, bpmnNode.label));
+            let inPlace = this.addInputPlace();
+            this.addArc(Arc.create(inPlace, trans))
+        }
     }
 
+   override get inputPlace(): Place {
+       let notConnectedPlace = this.findNotConnectedInputPlace();
+       notConnectedPlace?.setConnected()
 
-
-    override addInputPlace(subnetBefore: PnSubnet): Place {
-        let inputPlace: Place = this.addPlace(Place.create({ isStartPlace: false }));
-        let transition: Transition = this.findNotConnectedTransition()!;
-        this.addArc(Arc.create(inputPlace, transition))
-        transition.setConnected();
-        return inputPlace;
-    }
+       return notConnectedPlace!;
+   }
 
     override addArcTo(to: PnElement) {
         for (let transition of this.transitions) {

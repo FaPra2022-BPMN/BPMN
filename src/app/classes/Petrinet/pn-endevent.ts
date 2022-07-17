@@ -7,7 +7,7 @@ export class PnEndEvent extends PnSubnet {
 
     constructor(bpmnNode: BpmnNode) {
         super(bpmnNode);
-
+        this.addEndPlace()
     }
     addEndPlace(): void {
         let endPlace: Place = this.addPlace(Place.create({ isStartPlace: false }))

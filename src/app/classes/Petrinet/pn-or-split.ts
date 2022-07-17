@@ -5,19 +5,18 @@ import { PnElement } from "./pn-element";
 import { PnSubnet } from "./pn-subnet";
 import { Transition } from "./transition";
 
-export class PnXorSplit extends PnSubnet {
+export class PnOrSplit extends PnSubnet {
+    
 
     constructor(bpmnNode: BpmnNode) {
         super(bpmnNode);
 
         //create as many transitions as there are outgoing edges
-        //connect the only one incoming place to all the transitions
-        while (this.transitions.length != bpmnNode.outEdges.length){
-            let trans = this.addTransition(new Transition(bpmnNode.id + this.transitions.length, bpmnNode.label))
-            this.addArc(Arc.create(this.inputPlace, trans))
-        }
-            
+        while (this.transitions.length != bpmnNode.outEdges.length)
+            this.addTransition(new Transition(bpmnNode.id + this.transitions.length, bpmnNode.label))
     }
+
+   
 
     override addArcTo(to: PnElement){
         let transition: Transition = this.findNotConnectedTransition()!;
