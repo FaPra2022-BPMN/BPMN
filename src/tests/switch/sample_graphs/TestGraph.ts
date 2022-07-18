@@ -2,11 +2,13 @@ import { BpmnEdge } from "src/app/classes/Basic/Bpmn/BpmnEdge/BpmnEdge";
 import { BpmnGraph } from "src/app/classes/Basic/Bpmn/BpmnGraph";
 import { BpmnNode } from "src/app/classes/Basic/Bpmn/BpmnNode";
 import { BpmnEventEnd } from "src/app/classes/Basic/Bpmn/events/BpmnEventEnd";
+import { BpmnEventIntermediate } from "src/app/classes/Basic/Bpmn/events/BpmnEventIntermediate";
 import { BpmnEventStart } from "src/app/classes/Basic/Bpmn/events/BpmnEventStart";
 import { BpmnGatewayJoinAnd } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewayJoinAnd";
 import { BpmnGatewayJoinXor } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewayJoinXor";
 import { BpmnGatewaySplitAnd } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewaySplitAnd";
 import { BpmnGatewaySplitXor } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewaySplitXor";
+import { BpmnTaskBusinessRule } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskBusinessRule";
 import { BpmnTaskManual } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskManual";
 import { BpmnTaskReceiving } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskReceiving";
 import { BpmnTaskSending } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskSending";
@@ -32,6 +34,17 @@ export class TestGraph {
         return this._edge_idx.toString()
     }
 
+    createBusinessRuleTask(){
+        return this.createNode(new BpmnTaskBusinessRule("BRTask"), "BusinessRule")
+    }
+
+    createIntermediateEventOne(){
+        return this.createNode(new BpmnEventIntermediate("IntEvent1"), "IntEvent1");
+    }
+
+    createIntermediateEventTwo(){
+        return this.createNode(new BpmnEventIntermediate("IntEvent2"), "IntEvent2");
+    }
     createXorSplit(){
         return this.createNode(new BpmnGatewaySplitXor("XORSplit"), "XORSplit");
     }
