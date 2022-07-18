@@ -1,15 +1,4 @@
-import { BpmnEdge } from "src/app/classes/Basic/Bpmn/BpmnEdge/BpmnEdge";
 import { BpmnGraph } from "src/app/classes/Basic/Bpmn/BpmnGraph";
-import { BpmnEventEnd } from "src/app/classes/Basic/Bpmn/events/BpmnEventEnd";
-import { BpmnEventStart } from "src/app/classes/Basic/Bpmn/events/BpmnEventStart";
-import { BpmnGatewayJoinAnd } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewayJoinAnd";
-import { BpmnGatewayJoinXor } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewayJoinXor";
-import { BpmnGatewaySplitAnd } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewaySplitAnd";
-import { BpmnGatewaySplitXor } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewaySplitXor";
-import { BpmnTaskReceiving } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskReceiving";
-import { BpmnTaskSending } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskSending";
-import { BpmnTaskService } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskService";
-import { BpmnTaskUserTask } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskUserTask";
 import { TestGraph } from "./TestGraph";
 
 export class XorGraphWithNestedAnd extends TestGraph{
@@ -18,7 +7,7 @@ export class XorGraphWithNestedAnd extends TestGraph{
        
         //startEvent --> Parent XOR SPLIT
         let startEvent = this.createStartEvent();
-        let gatewaySplitOrParent = this.createNode(new BpmnGatewaySplitXor("XORSplit"), "XORSplit");
+        let gatewaySplitOrParent = this.createXorSplit()
         this.createEdge(startEvent, gatewaySplitOrParent);
 
         //Parent XOR SPLIT --> Task1

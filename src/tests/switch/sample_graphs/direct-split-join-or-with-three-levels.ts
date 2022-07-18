@@ -1,6 +1,5 @@
 import { BpmnEdge } from "src/app/classes/Basic/Bpmn/BpmnEdge/BpmnEdge";
 import { BpmnGraph } from "src/app/classes/Basic/Bpmn/BpmnGraph";
-import { BpmnNode } from "src/app/classes/Basic/Bpmn/BpmnNode";
 import { BpmnEventEnd } from "src/app/classes/Basic/Bpmn/events/BpmnEventEnd";
 import { BpmnEventIntermediate } from "src/app/classes/Basic/Bpmn/events/BpmnEventIntermediate";
 import { BpmnEventStart } from "src/app/classes/Basic/Bpmn/events/BpmnEventStart";
@@ -9,7 +8,6 @@ import { BpmnGatewaySplitOr } from "src/app/classes/Basic/Bpmn/gateways/BpmnGate
 import { BpmnTaskManual } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskManual";
 import { BpmnTaskSending } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskSending";
 import { BpmnTaskService } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskService";
-import { BpmnTaskUserTask } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskUserTask";
 import { TestGraph } from "./TestGraph";
 
 export class DirectSplitJoinOr extends TestGraph {
