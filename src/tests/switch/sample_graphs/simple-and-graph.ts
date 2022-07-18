@@ -14,33 +14,33 @@ export class SimpleAndGraph extends TestGraph{
     constructor(){
         super()
          //startEvent --> Task1
-         let startEvent = this.createNode(new BpmnEventStart("StartEv"), "Start");
-         let task1 = this.createNode(new BpmnTaskService("Task1"), "ServiceTask");
-         this.graph.addEdge(new BpmnEdge(this.edge_idx,startEvent, task1));
+         let startEvent = this.createStartEvent();
+         let task1 = this.createServiceTask();
+         this.createEdge(startEvent, task1);
  
          //Task1 --> SPLIT_AND gateway
-         let gatewaySplitAnd1 = this.createNode(new BpmnGatewaySplitAnd("AndSplit"), "AndSplit");
-         this.graph.addEdge(new BpmnEdge(this.edge_idx, task1, gatewaySplitAnd1));
+         let gatewaySplitAnd1 = this.createAndSplit();
+         this.createEdge(task1, gatewaySplitAnd1);
        
  
          //SPLIT_AND gateway --> Task2
-         let task2 = this.createNode(new BpmnTaskManual("Task2"), "ManualTask");
-         this.graph.addEdge(new BpmnEdge(this.edge_idx, gatewaySplitAnd1, task2));
+         let task2 = this.createManualTask();
+         this.createEdge(gatewaySplitAnd1, task2);
  
          //SPLIT_AND gateway --> Task3
-         let task3 = this.createNode(new BpmnTaskUserTask("Task3"), "UserTask");
-         this.graph.addEdge(new BpmnEdge(this.edge_idx, gatewaySplitAnd1, task3));
+         let task3 = this.createUserTask();
+         this.createEdge(gatewaySplitAnd1, task3);
  
          //Task2 --> JOIN_AND gateway
-         let gatewayJoinAnd = this.createNode(new BpmnGatewayJoinAnd("AndJoin"), "AndJoin");
-         this.graph.addEdge(new BpmnEdge(this.edge_idx, task2, gatewayJoinAnd));
+         let gatewayJoinAnd = this.createJoinAnd()
+         this.createEdge(task2, gatewayJoinAnd);
  
          //Task3 --> JOIN_AND gateway
-         this.graph.addEdge(new BpmnEdge(this.edge_idx, task3, gatewayJoinAnd));
+         this.createEdge(task3, gatewayJoinAnd);
  
          //JOIN_OR gateway --> EndEvent
-         let endEvent = this.createNode(new BpmnEventEnd("EndEv"), "End");
-         this.graph.addEdge(new BpmnEdge(this.edge_idx, gatewayJoinAnd, endEvent));
+         let endEvent = this.createEndEvent()
+         this.createEdge(gatewayJoinAnd, endEvent);
 
     }
    static create():BpmnGraph{     

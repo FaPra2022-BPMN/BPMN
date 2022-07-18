@@ -10,14 +10,14 @@ export class SimpleGraphNoGateways extends TestGraph{
     constructor(){
         super()
          //startEvent --> Task1
-         let startEvent = this.createNode(new BpmnEventStart("StartEv"), "Start");
-         let task1 = this.createNode(new BpmnTaskService("Task1"), "ServiceTask");
-         this.graph.addEdge(new BpmnEdge(this.edge_idx,startEvent, task1));
+         let startEvent = this.createStartEvent();
+         let task1 = this.createServiceTask();
+         this.createEdge(startEvent, task1);
  
         
         //Task1 --> EndEvent
-         let endEvent = this.createNode(new BpmnEventEnd("EndEv"), "End");
-         this.graph.addEdge(new BpmnEdge(this.edge_idx, task1, endEvent));
+         let endEvent = this.createEndEvent();
+         this.createEdge(task1, endEvent);
 
     }
    static create():BpmnGraph{     
