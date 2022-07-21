@@ -2,13 +2,17 @@ import { BpmnNode } from "../Basic/Bpmn/BpmnNode";
 import { BpmnEventEnd } from "../Basic/Bpmn/events/BpmnEventEnd";
 import { BpmnEventStart } from "../Basic/Bpmn/events/BpmnEventStart";
 import { BpmnGatewayJoinAnd } from "../Basic/Bpmn/gateways/BpmnGatewayJoinAnd";
+import { BpmnGatewayJoinOr } from "../Basic/Bpmn/gateways/BpmnGatewayJoinOr";
 import { BpmnGatewayJoinXor } from "../Basic/Bpmn/gateways/BpmnGatewayJoinXor";
+import { BpmnGatewaySplitOr } from "../Basic/Bpmn/gateways/BpmnGatewaySplitOr";
 import { BpmnGatewaySplitXor } from "../Basic/Bpmn/gateways/BpmnGatewaySplitXor";
 import { Arc } from "./arc";
 import { Place } from "./place";
 import { PlaceCounter } from "./place-counter";
 import { PnAndJoin } from "./pn-and-join";
 import { PnEndEvent } from "./pn-endevent";
+import { PnOrJoin } from "./pn-or-join";
+import { PnOrSplit } from "./pn-or-split";
 import { PnStartEvent } from "./pn-startevent";
 import { PnSubnet } from "./pn-subnet";
 import { PnXorJoin } from "./pn-xor-join";
@@ -121,6 +125,10 @@ export class Petrinet {
 
         if (bpmnNode instanceof BpmnGatewayJoinAnd)
             return new PnAndJoin(bpmnNode);
+        if (bpmnNode instanceof BpmnGatewayJoinOr)
+            return new PnOrJoin(bpmnNode);
+        if (bpmnNode instanceof BpmnGatewaySplitOr)
+            return new PnOrSplit(bpmnNode);
         return new PnSubnet(bpmnNode)
     }
     private getSubnet(newNode: BpmnNode): PnSubnet | undefined {

@@ -5,8 +5,10 @@ import { BpmnEventEnd } from "src/app/classes/Basic/Bpmn/events/BpmnEventEnd";
 import { BpmnEventIntermediate } from "src/app/classes/Basic/Bpmn/events/BpmnEventIntermediate";
 import { BpmnEventStart } from "src/app/classes/Basic/Bpmn/events/BpmnEventStart";
 import { BpmnGatewayJoinAnd } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewayJoinAnd";
+import { BpmnGatewayJoinOr } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewayJoinOr";
 import { BpmnGatewayJoinXor } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewayJoinXor";
 import { BpmnGatewaySplitAnd } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewaySplitAnd";
+import { BpmnGatewaySplitOr } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewaySplitOr";
 import { BpmnGatewaySplitXor } from "src/app/classes/Basic/Bpmn/gateways/BpmnGatewaySplitXor";
 import { BpmnTaskBusinessRule } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskBusinessRule";
 import { BpmnTaskManual } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskManual";
@@ -18,7 +20,7 @@ import { BpmnTaskUserTask } from "src/app/classes/Basic/Bpmn/tasks/BpmnTaskUserT
 export class TestGraph {
     _edge_idx: number
     graph: BpmnGraph
-    constructor(){
+    constructor() {
         this.graph = new BpmnGraph();
         this._edge_idx = 0;
     }
@@ -29,67 +31,77 @@ export class TestGraph {
         return node
     }
 
-    get edge_idx(): string{
+    get edge_idx(): string {
         this._edge_idx++
         return this._edge_idx.toString()
     }
 
-    createBusinessRuleTask(){
+    createBusinessRuleTask(): BpmnNode {
         return this.createNode(new BpmnTaskBusinessRule("BRTask"), "BusinessRule")
     }
 
-    createIntermediateEventOne(){
+    createIntermediateEventOne(): BpmnNode {
         return this.createNode(new BpmnEventIntermediate("IntEvent1"), "IntEvent1");
     }
 
-    createIntermediateEventTwo(){
+    createIntermediateEventTwo(): BpmnNode {
         return this.createNode(new BpmnEventIntermediate("IntEvent2"), "IntEvent2");
     }
-    createXorSplit(){
+    createXorSplit(): BpmnNode {
         return this.createNode(new BpmnGatewaySplitXor("XORSplit"), "XORSplit");
     }
 
-    createEndEvent(): BpmnNode{
+    createOrSplit(): BpmnNode {
+        return this.createNode(new BpmnGatewaySplitOr("ORSplit"), "ORSplit");
+
+    }
+
+    createOrJoin(): BpmnNode {
+        return this.createNode(new BpmnGatewayJoinOr("ORJoin"), "ORJoin");
+
+    }
+
+    createEndEvent(): BpmnNode {
         return this.createNode(new BpmnEventEnd("EndEvent"), "EndEvent")
     }
 
-    createStartEvent(): BpmnNode{
+    createStartEvent(): BpmnNode {
         return this.createNode(new BpmnEventStart("StartEv"), "Start");
     }
 
-    createSendingTask(): BpmnNode{
+    createSendingTask(): BpmnNode {
         return this.createNode(new BpmnTaskSending("SendTask"), "SendTask");
     }
 
-    createEdge(from: BpmnNode, to: BpmnNode): void{
+    createEdge(from: BpmnNode, to: BpmnNode): void {
         this.graph.addEdge(new BpmnEdge(this.edge_idx, from, to));
     }
 
-    createReceivingTask(): BpmnNode{
+    createReceivingTask(): BpmnNode {
         return this.createNode(new BpmnTaskReceiving("ReceiveTask"), "ReceiveTask")
     }
 
-    createAndSplit(): BpmnNode{
+    createAndSplit(): BpmnNode {
         return this.createNode(new BpmnGatewaySplitAnd("ANDSplit"), "ANDSplit");
     }
 
-    createUserTask(): BpmnNode{
+    createUserTask(): BpmnNode {
         return this.createNode(new BpmnTaskUserTask("UserTask"), "UserTask");
     }
 
-    createServiceTask(): BpmnNode{
+    createServiceTask(): BpmnNode {
         return this.createNode(new BpmnTaskService("ServiceTask"), "ServiceTask");
     }
 
-    createJoinAnd(): BpmnNode{
+    createJoinAnd(): BpmnNode {
         return this.createNode(new BpmnGatewayJoinAnd("ANDJoin"), "ANDJoin");
     }
 
-    createXorJoin(): BpmnNode{
+    createXorJoin(): BpmnNode {
         return this.createNode(new BpmnGatewayJoinXor("XORJoin"), "XORJoin");
     }
 
-    createManualTask(): BpmnNode{
+    createManualTask(): BpmnNode {
         return this.createNode(new BpmnTaskManual("ManualTask"), "ManualTask");
     }
 }
