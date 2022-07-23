@@ -1,14 +1,9 @@
+import { ComponentFactoryResolver } from "@angular/core";
 import { BpmnNode } from "../Basic/Bpmn/BpmnNode";
 import { BpmnEventEnd } from "../Basic/Bpmn/events/BpmnEventEnd";
-import { BpmnEventStart } from "../Basic/Bpmn/events/BpmnEventStart";
-import { BpmnGatewayJoinAnd } from "../Basic/Bpmn/gateways/BpmnGatewayJoinAnd";
-import { BpmnGatewayJoinXor } from "../Basic/Bpmn/gateways/BpmnGatewayJoinXor";
-import { BpmnGatewaySplitXor } from "../Basic/Bpmn/gateways/BpmnGatewaySplitXor";
 import { Arc } from "./arc";
 import { Place } from "./place";
 import { PnElement } from "./pn-element";
-import { PnXorJoin } from "./pn-xor-join";
-import { PnXorSplit } from "./pn-xor-split";
 import { Transition } from "./transition";
 
 export class PnSubnet {
@@ -33,7 +28,14 @@ export class PnSubnet {
         this.addArc(Arc.create(this._inputPlace, this.transition))
     }
 
-    get inputPlace(): Place{
+    arcExists(from: PnElement, to: PnElement): boolean{
+        for(let arc of this.arcs)
+          if(arc._from === from && arc._to === to)
+            return true;
+        return false;
+    }
+
+    get inputPlace(): Place {
         return this._inputPlace
     }
 
@@ -46,15 +48,22 @@ export class PnSubnet {
     }
 
     addArc(arc: Arc): Arc {
-        if (!this.arcs.includes(arc))
+        if (!this.arcExists(arc._from, arc._to))
             this.arcs.push(arc)
-        
+
         return arc
     }
 
     addArcTo(to: PnElement) {
         let arc: Arc = Arc.create(this.transition, to);
         this.addArc(arc);
+    }
+
+    createTransitionWithIndex(bpmnNode: BpmnNode, counter: number): Transition {
+        let trans = this.addTransition(new Transition(bpmnNode.id, bpmnNode.label))
+        trans.addCounterToLabelAndId(counter);
+
+        return trans;
     }
 
     addPlace(place: Place): Place {
@@ -74,7 +83,7 @@ export class PnSubnet {
     findNotConnectedInputPlace(): Place | null {
 
         for (let place of this.places) {
-            
+
             if (!place.isConnected())
                 return place;
         }

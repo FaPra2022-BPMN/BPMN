@@ -9,10 +9,16 @@ export class PnXorJoin extends PnSubnet {
     constructor(bpmnNode: BpmnNode) {
         super(bpmnNode);
 
+         //for adding index to the label of each transition
+         let counter: number = 1;
+
+         //one transition already exists
+         this.transition.addCounterToLabelAndId(counter++);
+
         //create as many transitions as there are incoming edges
         //for every transition - add incoming place
         while (this.transitions.length != bpmnNode.inEdges.length){
-            let trans = this.addTransition(new Transition(`${bpmnNode.id}${this.transitions.length + 1}`, bpmnNode.label));
+            let trans = this.createTransitionWithIndex(bpmnNode,counter++)
             let inPlace = this.addInputPlace();
             this.addArc(Arc.create(inPlace, trans))
         }

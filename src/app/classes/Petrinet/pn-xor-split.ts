@@ -10,10 +10,16 @@ export class PnXorSplit extends PnSubnet {
     constructor(bpmnNode: BpmnNode) {
         super(bpmnNode);
 
+         //for adding index to the label of each transition
+         let counter: number = 1;
+
+         //one transition already exists
+         this.transition.addCounterToLabelAndId(counter++);
+
         //create as many transitions as there are outgoing edges
         //connect the only one incoming place to all the transitions
         while (this.transitions.length != bpmnNode.outEdges.length){
-            let trans = this.addTransition(new Transition(bpmnNode.id + this.transitions.length, bpmnNode.label))
+            let trans = this.createTransitionWithIndex(bpmnNode, counter++);
             this.addArc(Arc.create(this.inputPlace, trans))
         }
             

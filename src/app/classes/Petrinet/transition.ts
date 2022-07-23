@@ -2,8 +2,8 @@ import { PnElement } from "./pn-element";
 
 export class Transition extends PnElement{
     
-    constructor(_id: string, public label: string){
-        super(_id);
+    constructor(id: string, public label: string){
+        super(id);
     }
 
     print(): string{
@@ -15,6 +15,9 @@ export class Transition extends PnElement{
         return value.replace(" ", "-")
     }
 
-    
+    addCounterToLabelAndId(counter: number){
+        this.id += counter;
+        this.label += counter;
+    }
 
 }

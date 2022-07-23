@@ -1,3 +1,6 @@
+import { PnElement } from "./pn-element";
+import { Transition } from "./transition";
+
 export class PnUtils {
 
     static getCombinationsOfIds(ids: string[]): string[][] {
@@ -52,6 +55,28 @@ export class PnUtils {
         console.log(listOfLists)
     }
 
+    static addCounterToLabelAndId(transitions: Array<Transition>) {
+        let counter: number = 1;
+        transitions.forEach(trans => {
+            trans.id += counter;
+            trans.label += counter;
+            counter++;
+        })
+    }
 
+    static getIds(elements: Array<PnElement>): Array<string> {
+        let ids: Array<string> = new Array<string>();
+        for (let el of elements)
+            ids.push(el.id)
 
+        return ids;
+    }
+
+    static getTransitionById(id: string, transitions: Array<Transition>): Transition | null {
+        for (let trans of transitions)
+            if (trans.id === id)
+                return trans
+
+        return null
+    }
 }
