@@ -13,7 +13,7 @@ export class PnXorJoin extends PnSubnet {
          let counter: number = 1;
 
          //one transition already exists
-         this.transition.addCounterToLabelAndId(counter++);
+         this.transitions[0].addCounterToLabelAndId(counter++);
 
         //create as many transitions as there are incoming edges
         //for every transition - add incoming place

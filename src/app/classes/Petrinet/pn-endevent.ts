@@ -11,7 +11,7 @@ export class PnEndEvent extends PnSubnet {
     }
     addEndPlace(): void {
         let endPlace: Place = this.addPlace(Place.create({ isStartPlace: false }))
-        this.addArc(Arc.create(this.transition, endPlace))
+        this.addArc(Arc.create(this.transitions[0], endPlace))
     }
 
 }

@@ -12,7 +12,7 @@ export class PnAndJoin extends PnSubnet {
         //connect every place with the only transition
         while (this.places.length != bpmnNode.inEdges.length){
             let place = this.addPlace(Place.create({isStartPlace: false}));
-            this.addArc(Arc.create(place, this.transition))
+            this.addArc(Arc.create(place, this.transitions[0]))
         }
     }
 

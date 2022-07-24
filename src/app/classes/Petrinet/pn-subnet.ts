@@ -9,7 +9,6 @@ import { Transition } from "./transition";
 export class PnSubnet {
     id: string;
     _inputPlace: Place;
-    _transition: Transition
 
     _transitions: Array<Transition>;
     _places: Array<Place>;
@@ -23,9 +22,9 @@ export class PnSubnet {
         this._places = new Array<Place>();
         this._arcs = new Array<Arc>();
 
-        this._transition = this.addTransition(new Transition(bpmnNode.id, bpmnNode.label))
+        let transition = this.addTransition(new Transition(bpmnNode.id, bpmnNode.label))
         this._inputPlace = this.addInputPlace();
-        this.addArc(Arc.create(this._inputPlace, this.transition))
+        this.addArc(Arc.create(this._inputPlace, transition))
     }
 
     arcExists(from: PnElement, to: PnElement): boolean {
@@ -43,10 +42,6 @@ export class PnSubnet {
         return this.bpmnNode instanceof BpmnEventEnd
     }
 
-    public get transition(): Transition {
-        return this._transition
-    }
-
     addArc(arc: Arc): Arc {
         if (!this.arcExists(arc._from, arc._to))
             this.arcs.push(arc)
@@ -55,7 +50,7 @@ export class PnSubnet {
     }
 
     addArcTo(to: PnElement) {
-        let arc: Arc = Arc.create(this.transition, to);
+        let arc: Arc = Arc.create(this.transitions[0], to);
         this.addArc(arc);
     }
 
