@@ -1,16 +1,13 @@
 import { BpmnNode } from "../Basic/Bpmn/BpmnNode";
 import { Arc } from "./arc";
+import { CombiTransition } from "./combi-transition";
 import { Place } from "./place";
 import { PnElement } from "./pn-element";
-import { PnSubnet } from "./pn-subnet";
+import { PnOrGateway } from "./pn-or-gateway";
 import { PnUtils } from "./pn-utils";
 import { Transition } from "./transition";
 
-export class PnOrJoin extends PnSubnet {
-
-    //transitions that represent AND combinations of paths 
-    combiTransitions: Map<string, Array<string>>;
-
+export class PnOrJoin extends PnOrGateway {
 
     constructor(bpmnNode: BpmnNode) {
         super(bpmnNode);
@@ -19,29 +16,27 @@ export class PnOrJoin extends PnSubnet {
         let counter: number = 1;
 
         //one transition already exists
-        this.transition.addCounterToLabelAndId(counter++);
+        this.transitions[0].addCounterToLabelAndId(counter++);
 
         //create as many transitions as there are incoming edges
         //for every transition - add incoming place
-        while (this.transitions.length != bpmnNode.inEdges.length) {
-            let trans = this.createTransitionWithIndex(bpmnNode, counter++);
+        while (this.transitions.length < bpmnNode.inEdges.length) {
+            let trans = this.addTransition(new Transition(bpmnNode.id, bpmnNode.label, counter++));
             let inPlace = this.addInputPlace();
             this.addArc(Arc.create(inPlace, trans))
         }
-        //transitions that represent AND combinations of paths 
-        this.combiTransitions = new Map<string, Array<string>>();
 
-        let combinationsOfIds: string[][] = PnUtils.getCombinationsOfIds(PnUtils.getIds(this.transitions))
+        let combinationsOfIds: string[][] = PnUtils.getCombinationsOfIds(PnUtils.getIds(this.simpleTransitions))
         for (let combinationOfIds of combinationsOfIds) {
-            let combiTrans: Transition = this.createTransitionWithIndex(bpmnNode, counter++)
-            this.combiTransitions.set(combiTrans.id, combinationOfIds)
+
+            let combiTrans = new CombiTransition(bpmnNode.id, bpmnNode.label,
+                this.getTransitionsByIds(combinationOfIds));
+            this.addTransition(combiTrans);
 
             for (let transId of combinationOfIds) {
-                let trans = PnUtils.getTransitionById(transId, this.transitions)!;
-                let inPlace = this.getInputPlace(trans)!;
-
-                if (!this.arcExists(inPlace, combiTrans))
-                    this.addArc(Arc.create(inPlace, combiTrans))
+                let trans = this.getTransitionById(transId)!;
+                let inPlace = this.getInputPlace(trans)!;              
+                this.addArc(Arc.create(inPlace, combiTrans))
             }
 
         }

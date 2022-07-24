@@ -19,7 +19,7 @@ export class PnXorSplit extends PnSubnet {
         //create as many transitions as there are outgoing edges
         //connect the only one incoming place to all the transitions
         while (this.transitions.length != bpmnNode.outEdges.length){
-            let trans = this.createTransitionWithIndex(bpmnNode, counter++);
+            let trans = this.addTransition(new Transition(bpmnNode.id, bpmnNode.label, counter++));
             this.addArc(Arc.create(this.inputPlace, trans))
         }
             

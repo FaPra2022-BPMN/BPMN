@@ -15,21 +15,45 @@ import { PnOrJoin } from "./pn-or-join";
 import { PnOrSplit } from "./pn-or-split";
 import { PnStartEvent } from "./pn-startevent";
 import { PnSubnet } from "./pn-subnet";
+import { PnUtils } from "./pn-utils";
 import { PnXorJoin } from "./pn-xor-join";
 import { PnXorSplit } from "./pn-xor-split";
 import { Transition } from "./transition";
 
 export class Petrinet {
 
-    subnets: Array<PnSubnet>
+    bpmnPetriMap: Map<BpmnNode, PnSubnet>
 
     constructor(bpmnNodes: Array<BpmnNode>) {
-        this.subnets = new Array<PnSubnet>()
+        this.bpmnPetriMap = new Map<BpmnNode, PnSubnet>()
+
+        //for adding index to places
         PlaceCounter.reset()
 
         for (let bpmnNode of bpmnNodes)
-            this.addNodes(bpmnNode);
+            this.addSubnetForEachOutgoingConnection(bpmnNode);
 
+        this.connectEachOrSplitWithOrJoin()
+    }
+
+    connectEachOrSplitWithOrJoin(): void {
+        let splitJoinOrMap = PnUtils.getMatchingOrGateways(this.bpmnNodes)
+
+        splitJoinOrMap.forEach((join, split) => {
+            let pnOrSplit = this.bpmnPetriMap.get(split) as PnOrSplit
+            let pnOrJoin = this.bpmnPetriMap.get(join) as PnOrJoin
+            pnOrSplit.connectToOrJoin(pnOrJoin)
+        });
+
+    }
+
+    get bpmnNodes(): Array<BpmnNode> {
+        return Array.from(this.bpmnPetriMap.keys());
+    }
+
+    get pnSubnets(): Array<PnSubnet> {
+
+        return Array.from(this.bpmnPetriMap.values())
     }
 
     print(): string {
@@ -69,7 +93,7 @@ export class Petrinet {
 
     private collectPlaces(): Array<Place> {
         let places: Array<Place> = new Array<Place>()
-        for (let subnet of this.subnets)
+        for (let subnet of this.pnSubnets)
             places.push(...subnet.places)
 
         return places
@@ -77,22 +101,21 @@ export class Petrinet {
 
     private collectArcs(): Array<Arc> {
         let arcs: Array<Arc> = new Array<Arc>()
-        for (let subnet of this.subnets)
+        for (let subnet of this.pnSubnets)
             arcs.push(...subnet.arcs)
         return arcs
     }
 
     private collectTransitions(): Array<Transition> {
         let transitions: Array<Transition> = new Array<Transition>()
-        for (let subnet of this.subnets)
+        for (let subnet of this.pnSubnets)
             transitions.push(...subnet.transitions)
         return transitions
     }
-    public addNodes(bpmnNode: BpmnNode): void {
+    public addSubnetForEachOutgoingConnection(bpmnNode: BpmnNode): void {
         for (let outEdge of bpmnNode.outEdges) {
             let before: PnSubnet = this.add(bpmnNode);
             let after: PnSubnet = this.add(outEdge.to);
-
             this.connectSubnets(before, after);
         }
 
@@ -107,7 +130,7 @@ export class Petrinet {
         let subnet = this.getSubnet(bpmnNode)
         if (this.getSubnet(bpmnNode) === undefined) {
             subnet = this.createPnSubnet(bpmnNode)
-            this.subnets.push(subnet!);
+            this.bpmnPetriMap.set(bpmnNode, subnet);
         }
         return subnet!;
     }
@@ -132,7 +155,7 @@ export class Petrinet {
         return new PnSubnet(bpmnNode)
     }
     private getSubnet(newNode: BpmnNode): PnSubnet | undefined {
-        for (let subnet of this.subnets)
+        for (let subnet of this.pnSubnets)
             if (newNode.id === subnet.id)
                 return subnet;
 

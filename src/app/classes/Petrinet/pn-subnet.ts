@@ -28,10 +28,10 @@ export class PnSubnet {
         this.addArc(Arc.create(this._inputPlace, this.transition))
     }
 
-    arcExists(from: PnElement, to: PnElement): boolean{
-        for(let arc of this.arcs)
-          if(arc._from === from && arc._to === to)
-            return true;
+    arcExists(from: PnElement, to: PnElement): boolean {
+        for (let arc of this.arcs)
+            if (arc._from === from && arc._to === to)
+                return true;
         return false;
     }
 
@@ -59,13 +59,6 @@ export class PnSubnet {
         this.addArc(arc);
     }
 
-    createTransitionWithIndex(bpmnNode: BpmnNode, counter: number): Transition {
-        let trans = this.addTransition(new Transition(bpmnNode.id, bpmnNode.label))
-        trans.addCounterToLabelAndId(counter);
-
-        return trans;
-    }
-
     addPlace(place: Place): Place {
         if (!this.places.includes(place))
             this.places.push(place)
@@ -91,15 +84,9 @@ export class PnSubnet {
         return null;
     }
 
-    findNotConnectedTransition(): Transition | null {
+    findNotConnectedTransition(): Transition | undefined {
 
-        for (let transition of this.transitions) {
-
-            if (!transition.isConnected())
-                return transition;
-        }
-
-        return null;
+        return this.transitions.find(trans => !trans.connected)
     }
 
     public get places(): Array<Place> {
@@ -115,6 +102,14 @@ export class PnSubnet {
 
     addInputPlace(): Place {
         return this.addPlace(Place.create({ isStartPlace: false }));
+    }
+
+    getTransitionsByIds(ids: Array<string>): Array<Transition> {
+        return this.transitions.filter(trans => ids.includes(trans.id))
+    }
+
+    getTransitionById(id: string): Transition | undefined {
+        return this.transitions.find(trans => id === trans.id)
     }
 
 }

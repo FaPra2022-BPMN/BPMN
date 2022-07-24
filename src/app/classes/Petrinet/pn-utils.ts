@@ -1,4 +1,9 @@
+import { BpmnNode } from "../Basic/Bpmn/BpmnNode";
+import { BpmnGatewayJoinOr } from "../Basic/Bpmn/gateways/BpmnGatewayJoinOr";
+import { BpmnGatewaySplitOr } from "../Basic/Bpmn/gateways/BpmnGatewaySplitOr";
 import { PnElement } from "./pn-element";
+import { PnOrJoin } from "./pn-or-join";
+import { PnOrSplit } from "./pn-or-split";
 import { Transition } from "./transition";
 
 export class PnUtils {
@@ -72,11 +77,64 @@ export class PnUtils {
         return ids;
     }
 
-    static getTransitionById(id: string, transitions: Array<Transition>): Transition | null {
-        for (let trans of transitions)
-            if (trans.id === id)
-                return trans
+    static getMatchingOrGateways(nodes: Array<BpmnNode>): Map<BpmnNode, BpmnNode> {
 
-        return null
+        let map = new Map<BpmnNode, BpmnNode>();
+
+        for (let node of nodes) {
+            //TODO add error handling - if for some reason ORSplit doesn't have outgoing edges
+            if (this.isSplitOr(node))
+                map.set(node, this.getCorrespondingOrJoin(node)!)
+        }
+
+        return map;
+    }
+
+    static getMatchingOrSplitJoinTransitions(splits: Array<Transition>, joins: Array<Transition>): Map<Transition, Transition> {
+        let map = new Map<Transition, Transition>();
+        splits.forEach(split => {
+            let matchingJoin = joins.find(join => this.sameIndex(join, split))
+            if (matchingJoin != undefined)
+                map.set(split, matchingJoin)
+            //TODO
+            //else
+        })
+        return map;
+    }
+
+    private static sameIndex(transOne: Transition, transTwo: Transition): boolean {
+        return transOne.id.endsWith(transTwo.id.charAt(transTwo.id.length - 1))
+    }
+
+    private static isSplitOr(node: BpmnNode): boolean {
+        return node instanceof BpmnGatewaySplitOr
+    }
+
+    private static isJoinOr(node: BpmnNode): boolean {
+        return node instanceof BpmnGatewayJoinOr
+    }
+
+    private static hasOutEdges(node: BpmnNode): boolean {
+        return node.outEdges.length > 0;
+    }
+
+    private static next(node: BpmnNode): BpmnNode {
+        return node.outEdges[0].to
+    }
+
+    static getCorrespondingOrJoin(node: BpmnNode): BpmnNode | null {
+
+        while (this.hasOutEdges(node)) {
+            node = this.next(node);
+
+            if (this.isJoinOr(node))
+                return node;
+
+            //nested OR gateway
+            if (this.isSplitOr(node))
+                node = this.getCorrespondingOrJoin(node)!;
+        }
+
+        return null;
     }
 }
