@@ -56,8 +56,18 @@ export class TestGraph {
 
     }
 
+    createNestedOrSplit(): BpmnNode {
+        return this.createNode(new BpmnGatewaySplitOr("NestedORSplit"), "NestedORSplit");
+
+    }
+
     createOrJoin(): BpmnNode {
         return this.createNode(new BpmnGatewayJoinOr("ORJoin"), "ORJoin");
+
+    }
+
+    createNestedOrJoin(): BpmnNode {
+        return this.createNode(new BpmnGatewayJoinOr("NestedORJoin"), "NestedORJoin");
 
     }
 
