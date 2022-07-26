@@ -36,9 +36,37 @@ export class TestGraph {
         return this._edge_idx.toString()
     }
 
+    ////// TASKS ///////////////
+
+    createManualTask(): BpmnNode {
+        return this.createNode(new BpmnTaskManual("ManualTask"), "ManualTask");
+    }
+
     createBusinessRuleTask(): BpmnNode {
         return this.createNode(new BpmnTaskBusinessRule("BRTask"), "BusinessRule")
     }
+
+    createSendingTask(): BpmnNode {
+        return this.createNode(new BpmnTaskSending("SendTask"), "SendTask");
+    }
+
+    createReceivingTask(): BpmnNode {
+        return this.createNode(new BpmnTaskReceiving("ReceiveTask"), "ReceiveTask")
+    }
+
+    createUserTask(): BpmnNode {
+        return this.createNode(new BpmnTaskUserTask("UserTask"), "UserTask");
+    }
+
+    createUserTaskTwo(): BpmnNode {
+        return this.createNode(new BpmnTaskUserTask("UserTask2"), "UserTask2");
+    }
+
+    createServiceTask(): BpmnNode {
+        return this.createNode(new BpmnTaskService("ServiceTask"), "ServiceTask");
+    }
+
+    // EVENTS
 
     createIntermediateEventOne(): BpmnNode {
         return this.createNode(new BpmnEventIntermediate("IntEvent1"), "IntEvent1");
@@ -47,12 +75,27 @@ export class TestGraph {
     createIntermediateEventTwo(): BpmnNode {
         return this.createNode(new BpmnEventIntermediate("IntEvent2"), "IntEvent2");
     }
+
+    createEndEvent(): BpmnNode {
+        return this.createNode(new BpmnEventEnd("EndEvent"), "EndEvent")
+    }
+
+    createStartEvent(): BpmnNode {
+        return this.createNode(new BpmnEventStart("StartEv"), "Start");
+    }
+
+    /// GATEWAYS /////
     createXorSplit(): BpmnNode {
         return this.createNode(new BpmnGatewaySplitXor("XORSplit"), "XORSplit");
     }
 
     createOrSplit(): BpmnNode {
         return this.createNode(new BpmnGatewaySplitOr("ORSplit"), "ORSplit");
+
+    }
+
+    createOrSplitTwo(): BpmnNode {
+        return this.createNode(new BpmnGatewaySplitOr("ORSplitNext"), "ORSplitNext");
 
     }
 
@@ -66,42 +109,22 @@ export class TestGraph {
 
     }
 
+    createOrJoinTwo(): BpmnNode {
+        return this.createNode(new BpmnGatewayJoinOr("ORJoinNext"), "ORJoinNext");
+
+    }
+
     createNestedOrJoin(): BpmnNode {
         return this.createNode(new BpmnGatewayJoinOr("NestedORJoin"), "NestedORJoin");
 
     }
 
-    createEndEvent(): BpmnNode {
-        return this.createNode(new BpmnEventEnd("EndEvent"), "EndEvent")
-    }
-
-    createStartEvent(): BpmnNode {
-        return this.createNode(new BpmnEventStart("StartEv"), "Start");
-    }
-
-    createSendingTask(): BpmnNode {
-        return this.createNode(new BpmnTaskSending("SendTask"), "SendTask");
-    }
-
-    createEdge(from: BpmnNode, to: BpmnNode): void {
-        this.graph.addEdge(new BpmnEdge(this.edge_idx, from, to));
-    }
-
-    createReceivingTask(): BpmnNode {
-        return this.createNode(new BpmnTaskReceiving("ReceiveTask"), "ReceiveTask")
-    }
-
+   
     createAndSplit(): BpmnNode {
         return this.createNode(new BpmnGatewaySplitAnd("ANDSplit"), "ANDSplit");
     }
 
-    createUserTask(): BpmnNode {
-        return this.createNode(new BpmnTaskUserTask("UserTask"), "UserTask");
-    }
-
-    createServiceTask(): BpmnNode {
-        return this.createNode(new BpmnTaskService("ServiceTask"), "ServiceTask");
-    }
+   
 
     createJoinAnd(): BpmnNode {
         return this.createNode(new BpmnGatewayJoinAnd("ANDJoin"), "ANDJoin");
@@ -111,7 +134,13 @@ export class TestGraph {
         return this.createNode(new BpmnGatewayJoinXor("XORJoin"), "XORJoin");
     }
 
-    createManualTask(): BpmnNode {
-        return this.createNode(new BpmnTaskManual("ManualTask"), "ManualTask");
+    
+    createEdge(from: BpmnNode, to: BpmnNode): void {
+        this.graph.addEdge(new BpmnEdge(this.edge_idx, from, to));
     }
+
+   
+
+   
+    
 }

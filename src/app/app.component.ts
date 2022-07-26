@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
 import { AndGraphThreeLevelsWithEvents } from 'src/tests/switch/sample_graphs/and-graph-three-levels-with-events';
 import { OrGraphWithNestedOr } from 'src/tests/switch/sample_graphs/or-graph-with-nested-or';
+import { OrSequenceGraph } from 'src/tests/switch/sample_graphs/or-sequence-graph';
 import { SimpleAndGraph } from 'src/tests/switch/sample_graphs/simple-and-graph';
 import { SimpleGraphNoGateways } from 'src/tests/switch/sample_graphs/simple-graph-no-gateways';
 import { SimpleOrGraph } from 'src/tests/switch/sample_graphs/simple-or-graph';
@@ -25,7 +26,7 @@ export class AppComponent implements OnDestroy {
     public textareaFc: FormControl;
     private _sub: Subscription;
     public petritext: string = "";
-    diagrams: Array<string> = ["NO_GATEWAY", "AND_BASIC", "XOR_BASIC", "AND_3LEVEL", "XOR_NESTED_AND", "OR_BASIC", "OR_NESTED_OR"];
+    diagrams: Array<string> = ["NO_GATEWAY", "AND_BASIC", "XOR_BASIC", "AND_3LEVEL", "XOR_NESTED_AND", "OR_BASIC", "OR_SEQUENCE"];
 
 
     constructor(
@@ -70,7 +71,7 @@ export class AppComponent implements OnDestroy {
             case "AND_3LEVEL": { result = AndGraphThreeLevelsWithEvents.create(); break; }
             case "XOR_NESTED_AND": {result =  XorGraphWithNestedAnd.create(); break; }
             case "OR_BASIC": {result =  SimpleOrGraph.create(); break; }
-            case "OR_NESTED_OR": {result =  OrGraphWithNestedOr.create(); break; }
+            case "OR_SEQUENCE": {result =  OrSequenceGraph.create(); break; }
         }
 
         //this.textareaFc.setValue(text)
