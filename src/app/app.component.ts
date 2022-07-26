@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
 import { AndGraphThreeLevelsWithEvents } from 'src/tests/switch/sample_graphs/and-graph-three-levels-with-events';
-import { OrGraphWithNestedOr } from 'src/tests/switch/sample_graphs/or-graph-with-nested-or';
+import { Or3Level } from 'src/tests/switch/sample_graphs/or-with-three-levels';
 import { OrSequenceGraph } from 'src/tests/switch/sample_graphs/or-sequence-graph';
 import { SimpleAndGraph } from 'src/tests/switch/sample_graphs/simple-and-graph';
 import { SimpleGraphNoGateways } from 'src/tests/switch/sample_graphs/simple-graph-no-gateways';
@@ -26,7 +26,8 @@ export class AppComponent implements OnDestroy {
     public textareaFc: FormControl;
     private _sub: Subscription;
     public petritext: string = "";
-    diagrams: Array<string> = ["NO_GATEWAY", "AND_BASIC", "XOR_BASIC", "AND_3LEVEL", "XOR_NESTED_AND", "OR_BASIC", "OR_SEQUENCE"];
+    diagrams: Array<string> = ["NO_GATEWAY", "AND_BASIC", "XOR_BASIC", 
+    "AND_3LEVEL", "XOR_NESTED_AND", "OR_BASIC", "OR_SEQUENCE"];
 
 
     constructor(
