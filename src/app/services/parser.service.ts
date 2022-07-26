@@ -1,25 +1,27 @@
-import { Injectable } from '@angular/core';
-import { BpmnEdge } from '../classes/Basic/Bpmn/BpmnEdge/BpmnEdge';
-import { BpmnGraph } from '../classes/Basic/Bpmn/BpmnGraph';
-import { BpmnNode } from '../classes/Basic/Bpmn/BpmnNode';
-import { BpmnEvent } from '../classes/Basic/Bpmn/events/BpmnEvent';
-import { BpmnEventEnd } from '../classes/Basic/Bpmn/events/BpmnEventEnd';
-import { BpmnEventIntermediate } from '../classes/Basic/Bpmn/events/BpmnEventIntermediate';
-import { BpmnEventStart } from '../classes/Basic/Bpmn/events/BpmnEventStart';
-import { BpmnGateway } from '../classes/Basic/Bpmn/gateways/BpmnGateway';
-import { BpmnGatewayJoinAnd } from '../classes/Basic/Bpmn/gateways/BpmnGatewayJoinAnd';
-import { BpmnGatewayJoinOr } from '../classes/Basic/Bpmn/gateways/BpmnGatewayJoinOr';
-import { BpmnGatewayJoinXor } from '../classes/Basic/Bpmn/gateways/BpmnGatewayJoinXor';
-import { BpmnGatewaySplitAnd } from '../classes/Basic/Bpmn/gateways/BpmnGatewaySplitAnd';
-import { BpmnGatewaySplitOr } from '../classes/Basic/Bpmn/gateways/BpmnGatewaySplitOr';
-import { BpmnGatewaySplitXor } from '../classes/Basic/Bpmn/gateways/BpmnGatewaySplitXor';
-import { BpmnTask } from '../classes/Basic/Bpmn/tasks/BpmnTask';
-import { BpmnTaskBusinessRule } from '../classes/Basic/Bpmn/tasks/BpmnTaskBusinessRule';
-import { BpmnTaskManual } from '../classes/Basic/Bpmn/tasks/BpmnTaskManual';
-import { BpmnTaskReceiving } from '../classes/Basic/Bpmn/tasks/BpmnTaskReceiving';
-import { BpmnTaskSending } from '../classes/Basic/Bpmn/tasks/BpmnTaskSending';
-import { BpmnTaskService } from '../classes/Basic/Bpmn/tasks/BpmnTaskService';
-import { BpmnTaskUserTask } from '../classes/Basic/Bpmn/tasks/BpmnTaskUserTask';
+import {Injectable} from '@angular/core';
+import {BpmnDummyEdgeCorner} from '../classes/Basic/Bpmn/BpmnEdge/BpmnDummyEdgeCorner';
+import {BpmnEdge} from '../classes/Basic/Bpmn/BpmnEdge/BpmnEdge';
+import {BpmnEdgeCorner} from '../classes/Basic/Bpmn/BpmnEdge/BpmnEdgeCorner';
+import {BpmnGraph} from '../classes/Basic/Bpmn/BpmnGraph';
+import {BpmnNode} from '../classes/Basic/Bpmn/BpmnNode';
+import {BpmnEvent} from '../classes/Basic/Bpmn/events/BpmnEvent';
+import {BpmnEventEnd} from '../classes/Basic/Bpmn/events/BpmnEventEnd';
+import {BpmnEventIntermediate} from '../classes/Basic/Bpmn/events/BpmnEventIntermediate';
+import {BpmnEventStart} from '../classes/Basic/Bpmn/events/BpmnEventStart';
+import {BpmnGateway} from '../classes/Basic/Bpmn/gateways/BpmnGateway';
+import {BpmnGatewayJoinAnd} from '../classes/Basic/Bpmn/gateways/BpmnGatewayJoinAnd';
+import {BpmnGatewayJoinOr} from '../classes/Basic/Bpmn/gateways/BpmnGatewayJoinOr';
+import {BpmnGatewayJoinXor} from '../classes/Basic/Bpmn/gateways/BpmnGatewayJoinXor';
+import {BpmnGatewaySplitAnd} from '../classes/Basic/Bpmn/gateways/BpmnGatewaySplitAnd';
+import {BpmnGatewaySplitOr} from '../classes/Basic/Bpmn/gateways/BpmnGatewaySplitOr';
+import {BpmnGatewaySplitXor} from '../classes/Basic/Bpmn/gateways/BpmnGatewaySplitXor';
+import {BpmnTask} from '../classes/Basic/Bpmn/tasks/BpmnTask';
+import {BpmnTaskBusinessRule} from '../classes/Basic/Bpmn/tasks/BpmnTaskBusinessRule';
+import {BpmnTaskManual} from '../classes/Basic/Bpmn/tasks/BpmnTaskManual';
+import {BpmnTaskReceiving} from '../classes/Basic/Bpmn/tasks/BpmnTaskReceiving';
+import {BpmnTaskSending} from '../classes/Basic/Bpmn/tasks/BpmnTaskSending';
+import {BpmnTaskService} from '../classes/Basic/Bpmn/tasks/BpmnTaskService';
+import {BpmnTaskUserTask} from '../classes/Basic/Bpmn/tasks/BpmnTaskUserTask';
 
 @Injectable({
     providedIn: 'root'
@@ -27,17 +29,47 @@ import { BpmnTaskUserTask } from '../classes/Basic/Bpmn/tasks/BpmnTaskUserTask';
 export class ParserService {
 
     result: BpmnGraph;
-    elements: Array<BpmnNode>;
+    nodes: Array<BpmnNode>;
 
     constructor() {
         this.result = new BpmnGraph();
-        this.elements = new Array<BpmnNode>();
+        this.nodes = new Array<BpmnNode>();
+    }
+
+    /**
+     * is called after draging or reordering if positions have been changed
+     * @param nodes that have changed positions
+     * @param dummyNodes that have changed positions
+     * @param edgeStarts that have changed positions
+     * @param edgeEnds that have changed positions
+     */
+    positionOfNodesAndEdgesChanged(nodes: BpmnNode[], dummyNodes: BpmnDummyEdgeCorner[], edgeStarts: BpmnEdgeCorner[], edgeEnds: BpmnEdgeCorner[]) {
+        //@Vanessa
+
+        console.log(nodes)
+        console.log(dummyNodes)
+        console.log(edgeStarts)
+        console.log(edgeEnds)
+
+    }
+
+    /**
+     * this functions is called after the layout by the sugiyama algorithm has been done
+     * and allows to override the positions set by the alogrithm
+     */
+    setHardcodedPositions(bpmnGraph: BpmnGraph) {
+        //@Vanessa
+        for (const node of bpmnGraph.nodes) {
+            const id = node.id
+            //if (pos is defined in text)  => node.setPosXY(...,...)
+        }
+        for (const edge of bpmnGraph.edges) {
+        }
+        //console.log("read existing positions from text and set them to the nodes and edges")
     }
 
     parse(text: string): BpmnGraph | undefined {
         console.log("parsing");
-
-        let def = BpmnGraph.sampleGraph();
 
         const lines = text.split('\n');
 
@@ -47,7 +79,7 @@ export class ParserService {
             pos = lines.indexOf(act) + 1;
             while (pos < lines.length && lines[pos].match(/^\w/) !== null) {
                 let el: BpmnNode = this.parseActivities(lines[pos]);
-                this.elements.push(el);
+                this.nodes.push(el);
                 this.result.addNode(el);
                 pos++;
             }
@@ -58,7 +90,7 @@ export class ParserService {
             pos = lines.indexOf(evt) + 1;
             while (pos < lines.length && lines[pos].match(/^\w/) !== null) {
                 let el: BpmnNode = this.parseEvents(lines[pos]);
-                this.elements.push(el);
+                this.nodes.push(el);
                 this.result.addNode(el);
                 pos++;
             }
@@ -69,7 +101,7 @@ export class ParserService {
             pos = lines.indexOf(gateway) + 1;
             while (pos < lines.length && lines[pos].match(/^\w/) !== null) {
                 let el: BpmnNode = this.parseGateways(lines[pos]);
-                this.elements.push(el);
+                this.nodes.push(el);
                 this.result.addNode(el);
                 pos++;
             }
@@ -79,12 +111,13 @@ export class ParserService {
         if (seq) {
             pos = lines.indexOf(seq) + 1;
             while (pos < lines.length && lines[pos].match(/^\w/) !== null) {
-                let el = this.parseSequences(lines[pos]);
+                let el = this.parseSequences(lines[pos], this.nodes);
                 if (typeof el === 'object') {
                     this.result.addEdge(el);
                 } else {
                     console.log("nicht vorhandene Verbindungselemente bei" + el);
-                };
+                }
+                ;
                 pos++;
             }
         }
@@ -104,7 +137,7 @@ export class ParserService {
                 return BpmnGraph.loopingLouieGraph();
             default:
                 return this.result;
-                
+
         }
     }
 
@@ -119,12 +152,24 @@ export class ParserService {
         let activity = new BpmnTask(name);
 
         switch (lineSplit[1].toLowerCase()) {
-            case ("sending"): activity = new BpmnTaskSending(name); break;
-            case ("manual"): activity = new BpmnTaskManual(name); break;
-            case ("service"): activity = new BpmnTaskService(name); break;
-            case ("businessrule"): activity = new BpmnTaskBusinessRule(name); break;
-            case ("receiving"): activity = new BpmnTaskReceiving(name); break;
-            case ("usertask"): activity = new BpmnTaskUserTask(name); break;
+            case ("sending"):
+                activity = new BpmnTaskSending(name);
+                break;
+            case ("manual"):
+                activity = new BpmnTaskManual(name);
+                break;
+            case ("service"):
+                activity = new BpmnTaskService(name);
+                break;
+            case ("businessrule"):
+                activity = new BpmnTaskBusinessRule(name);
+                break;
+            case ("receiving"):
+                activity = new BpmnTaskReceiving(name);
+                break;
+            case ("usertask"):
+                activity = new BpmnTaskUserTask(name);
+                break;
         }
 
         activity.label = description;
@@ -155,10 +200,17 @@ export class ParserService {
         let event = new BpmnEvent(name);
 
         switch (lineSplit[1].toLowerCase()) {
-            case ("start"): event = new BpmnEventStart(name); break;
-            case ("intermediate"): event = new BpmnEventIntermediate(name); break;
-            case ("end"): event = new BpmnEventEnd(name); break;
+            case ("start"):
+                event = new BpmnEventStart(name);
+                break;
+            case ("intermediate"):
+                event = new BpmnEventIntermediate(name);
+                break;
+            case ("end"):
+                event = new BpmnEventEnd(name);
+                break;
         }
+
         event.label = description;
 
         console.log("name:" + name + "description:" + description);
@@ -175,19 +227,37 @@ export class ParserService {
     }
 
     private parseGateways(line: string): BpmnNode {
+        let description = line.split('"')[1];
+        let re = /"[\w ]*"/;
+        line = line.replace(re, "");
+
         const lineSplit = line.split(" ");
         const name = lineSplit[0];
         let gateway = new BpmnGateway(name);
         switch (lineSplit[1].toLowerCase()) {
-            case ("and_join"): gateway = new BpmnGatewayJoinAnd(name); break;
-            case ("and_split"): gateway = new BpmnGatewaySplitAnd(name); break;
-            case ("or_join"): gateway = new BpmnGatewayJoinOr(name); break;
-            case ("or_split"): gateway = new BpmnGatewaySplitOr(name); break;
-            case ("xor_join"): gateway = new BpmnGatewayJoinXor(name); break;
-            case ("xor_split"): gateway = new BpmnGatewaySplitXor(name); break;
+            case ("and_join"):
+                gateway = new BpmnGatewayJoinAnd(name);
+                break;
+            case ("and_split"):
+                gateway = new BpmnGatewaySplitAnd(name);
+                break;
+            case ("or_join"):
+                gateway = new BpmnGatewayJoinOr(name);
+                break;
+            case ("or_split"):
+                gateway = new BpmnGatewaySplitOr(name);
+                break;
+            case ("xor_join"):
+                gateway = new BpmnGatewayJoinXor(name);
+                break;
+            case ("xor_split"):
+                gateway = new BpmnGatewaySplitXor(name);
+                break;
         }
-        if (lineSplit[2]) {
-            let coordinates = lineSplit[2];
+        gateway.label = description;
+
+        if (lineSplit[3]) {
+            let coordinates = lineSplit[3];
             let coord = coordinates.split(',');
             coord[0] = coord[0].replace("(", "");
             coord[1] = coord[1].replace(")", "");
@@ -199,7 +269,7 @@ export class ParserService {
 
     }
 
-    private parseSequences(line: string): BpmnEdge | void {
+    private parseSequences(line: string, elements: Array<BpmnNode>): BpmnEdge | void {
 
         let description = line.split('"')[1];
         let re = /"[\w ]*"/;
@@ -208,7 +278,7 @@ export class ParserService {
 
         const name = lineSplit[0];
 
-        /* 
+        /*
         switch(lineSplit[1].toLowerCase()){
             case("sequenceflow"): type = Connectortype.SequenceFlow; break;
             case("association"): type = Connectortype.Association; break;
@@ -217,27 +287,29 @@ export class ParserService {
         let var1: BpmnNode;
         let var2: BpmnNode;
 
-        for (let i = 0; i < this.elements.length; i++) {
-            if (this.elements[i].id === lineSplit[3].trim()) {
-                var1 = this.elements[i];
-                for (let j = 0; j < this.elements.length; j++) {
-                    if (this.elements[j].id === lineSplit[4].trim()) {
-                        var2 = this.elements[j];
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].id === lineSplit[3].trim()) {
+                var1 = elements[i];
+                for (let j = 0; j < elements.length; j++) {
+                    if (elements[j].id === lineSplit[4].trim()) {
+                        var2 = elements[j];
                         console.log("sequence:" + var1.id + var2.id);
                         let sequence = new BpmnEdge(name, var1, var2);
 
-                        let i = 5; 
-                        while (lineSplit[i] != undefined && !lineSplit[i].startsWith("\r")) {
+                        let i = 5;
+                        while (lineSplit[i] && lineSplit[i] != undefined && !lineSplit[i].startsWith("\r")) {
+                            console.log(lineSplit[i]);
                             let coordinates = lineSplit[i];
                             let coord = coordinates.split(',');
+                            console.log("0:" + coord[0] + "1:" + coord[1]);
                             coord[0] = coord[0].replace("(", "").replace("\r", "");
-                            coord[1] = coord[1].replace(")", "").replace("\r", "");;
+                            coord[1] = coord[1].replace(")", "").replace("\r", "");
                             let x = parseInt(coord[0]);
                             let y = parseInt(coord[1]);
-                            sequence.addCornerXY(x,y);
+                            sequence.addCornerXY(x, y);
                             i++;
-                        } 
-                          return sequence;
+                        }
+                        return sequence;
                     }
                 }
             }

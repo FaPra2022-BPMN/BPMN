@@ -13,7 +13,7 @@ export class FormValidationService {
     }
 
     validateFormat(input: string): boolean {
-        console.log(input);
+        //console.log(input);
         if (!input.includes(".activities" && ".sequences")) {
             this.displayErrorService.displayError("wrong format");
             //console.log("wrong format");
@@ -53,11 +53,11 @@ export class FormValidationService {
             case "activities": regexp = /^[\w]+ (Sending|Manual|Service|BusinessRule|Receiving|UserTask) "[\w ]*"(?: \([0-9]*,[0-9]*\))?/i; break;
             case "sequences": regexp = /^[\w]+ (SequenceFlow|Association|InformationFlow) "[\w ]*" [\w]+ [\w]+(?: \([0-9]*,[0-9]*\))?/i; break;
             case "events": regexp = /^[\w]+ (Start|End|Intermediate) "[\w ]*"(?: \([0-9]*,[0-9]*\))?/i; break;
-            case "gateways": regexp = /^[\w]+ (XOR_SPLIT|XOR_JOIN|AND_SPLIT|AND_JOIN|OR_SPLIT|OR_JOIN)(?: \([0-9]*,[0-9]*\))?/i; break;
+            case "gateways": regexp = /^[\w]+ (XOR_SPLIT|XOR_JOIN|AND_SPLIT|AND_JOIN|OR_SPLIT|OR_JOIN) "[\w ]*"(?: \([0-9]*,[0-9]*\))?/i; break;
             default: return false;
         }
 
-        console.log("validating category:" + category);
+        //console.log("validating category:" + category);
         const lines = input.split('\n');
         let substring = input.substring(input.indexOf("." + category));
         let pos;
@@ -68,7 +68,7 @@ export class FormValidationService {
         } else {
             pos = lines.indexOf(cat)+1;
             while(pos < lines.length && lines[pos].match(/^\w/) !== null) {
-                let match = lines[pos].match(regexp); 
+                let match = lines[pos].match(regexp);
                 if (match === null) {
                     //console.log("format error at " + category);
                     this.displayErrorService.displayError("format error at " + category);
@@ -81,5 +81,5 @@ export class FormValidationService {
         //console.log(category + " validated");
         return true;
         }
-    
+
     }

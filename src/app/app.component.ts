@@ -1,19 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { debounceTime, Subscription } from 'rxjs';
-import { AndGraphThreeLevelsWithEvents } from 'src/tests/switch/sample_graphs/and-graph-three-levels-with-events';
-import { Or3Level } from 'src/tests/switch/sample_graphs/or-with-three-levels';
-import { OrSequenceGraph } from 'src/tests/switch/sample_graphs/or-sequence-graph';
-import { SimpleAndGraph } from 'src/tests/switch/sample_graphs/simple-and-graph';
-import { SimpleGraphNoGateways } from 'src/tests/switch/sample_graphs/simple-graph-no-gateways';
-import { SimpleOrGraph } from 'src/tests/switch/sample_graphs/simple-or-graph';
-import { SimpleXorGraph } from 'src/tests/switch/sample_graphs/simple-xor-graph';
-import { XorGraphWithNestedAnd } from 'src/tests/switch/sample_graphs/xor-graph-with-nested-and';
-import { BpmnGraph } from './classes/Basic/Bpmn/BpmnGraph';
-import { DisplayService } from './services/display.service';
-import { ParserService } from './services/parser.service';
-import { PetrinetService } from './services/petrinet.service';
-
+import {Component, OnDestroy} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {ParserService} from './services/parser.service';
+import {DisplayService} from './services/display.service';
+import {debounceTime, Subscription} from 'rxjs';
+import {BpmnGraph} from './classes/Basic/Bpmn/BpmnGraph';
+import {GraphValidationService} from "./services/graph-validation.service";
 
 @Component({
     selector: 'app-root',
@@ -25,20 +16,17 @@ export class AppComponent implements OnDestroy {
     mode = "free dragging"
     public textareaFc: FormControl;
     private _sub: Subscription;
-    public petritext: string = "";
-    diagrams: Array<string> = ["NO_GATEWAY", "AND_BASIC", "XOR_BASIC", 
-    "AND_3LEVEL", "XOR_NESTED_AND", "OR_BASIC", "OR_SEQUENCE"];
-
+    private result: any; //todo: any  muss weg
 
     constructor(
         private _parserService: ParserService,
         private _displayService: DisplayService,
-        private _petrinetService: PetrinetService
+        private graphValidationService: GraphValidationService
     ) {
         this.textareaFc = new FormControl();
         this._sub = this.textareaFc.valueChanges
-            .pipe(debounceTime(400))
-            .subscribe((val) => this.processSourceChange(val));
+        .pipe(debounceTime(400))
+        .subscribe((val) => this.processSourceChange(val));
         this.textareaFc.setValue(`Your advertising could be here`);
     }
 
@@ -47,97 +35,21 @@ export class AppComponent implements OnDestroy {
     }
 
     private processSourceChange(newSource: string) {
-        var result = this._parserService.parse(newSource);
-        if (result === undefined)
-            return
+        this.result = this._parserService.parse(newSource);
+        if (this.result !== undefined) {
 
-        if (result.nodes.length == 0) {
-            result = this._parserService.parse(this.default());
+            if (this.result.nodes.length == 0) {
+                this._displayService.display(BpmnGraph.anotherMonsterGraph());
 
+            } else {
+                this._displayService.display(this.result);
+            }
         }
-
-        result = SimpleGraphNoGateways.create()
-        this._displayService.display(result!);
-        this.petritext = this._petrinetService.convert(result!);
     }
 
-    public selectDiagram(event: any) {
-
-        let text: string = "";
-        let result: BpmnGraph;
-        switch (event.value) {
-            case "NO_GATEWAY": { result = SimpleGraphNoGateways.create(); break; }
-            case "AND_BASIC": { result = SimpleAndGraph.create(); break; }
-            case "XOR_BASIC": { result = SimpleXorGraph.create(); break; }
-            case "AND_3LEVEL": { result = AndGraphThreeLevelsWithEvents.create(); break; }
-            case "XOR_NESTED_AND": {result =  XorGraphWithNestedAnd.create(); break; }
-            case "OR_BASIC": {result =  SimpleOrGraph.create(); break; }
-            case "OR_SEQUENCE": {result =  OrSequenceGraph.create(); break; }
+    validateGraph(): void {
+        if (this.result.isValidateable()) {
+            this.graphValidationService.validateGraph(this.result);
         }
-
-        //this.textareaFc.setValue(text)
-        this._displayService.display(result!);
-        this.petritext = this._petrinetService.convert(result!);
-
-    }
-
-    AND(): string {
-        let diag: string = ".events\n"
-
-        diag += "e1 start \"Start\" (60,190)\n"
-        diag += "e2 end \"End\" (1600,190)\n"
-
-
-        diag += ".activities\n";
-        diag += "t1 service \"ServiceTask\" (442,60)\n"
-        diag += "t2 manual \"ManualTask\" (442,320)\n"
-        diag += "t3 usertask \"UserTask\" (1225,190)\n"
-
-        diag += ".gateways\n"
-        diag += "g1 and_split (210,190)\n"
-        diag += "g2 and_join (675,190)\n"
-
-        diag += ".sequences\n"
-        diag += "connector sequenceflow \"1\" e1 g1\n"
-        diag += "pfeil sequenceflow \"p2\" g1 t1\n"
-        diag += "connector2 sequenceflow \"p3\" g1 t2 (210,320)\n"
-        diag += "connector3 sequenceflow \"a4\" t1 g2 (675,60)\n"
-        diag += "connector4 sequenceflow \"a5\" t2 g2 (675,320)\n"
-        diag += "connector5 sequenceflow \"a6\" g2 t3\n"
-        diag += "connector7 sequenceflow \"a8\" t3 e2\n"
-
-        return diag;
-    }
-
-    default(): string {
-        let diag: string = ".events\n"
-
-        diag += "e1 start \"Start\" (60,190)\n"
-        diag += "e2 intermediate \"IntEv\" (850,190)\n"
-        diag += "e3 end \"EndEv\" (1600,190)\n"
-        
-
-        diag += ".activities\n";
-        diag += "t1 service \"ServiceTask\" (442,60)\n"
-
-        diag += "t2 manual \"ManualTask\" (442,320)\n"
-        diag += "t3 usertask \"UserTask\" (1225,190)\n"
-
-        diag += ".gateways \n"
-        diag += "g1 or_split (210,190)\n"
-        diag += "g2 or_join (675,190)\n"
-
-        diag += ".sequences\n"
-        diag += "connector sequenceflow \"1\" e1 g1\n"
-        diag += "pfeil sequenceflow \"p2\" g1 t1\n"
-        diag += "connector2 sequenceflow \"p3\" g1 t2 (210,320)\n"
-        diag += "connector3 sequenceflow \"a4\" t1 g2 (675,60)\n"
-        diag += "connector4 sequenceflow \"a5\" t2 g2 (675,320)\n"
-        diag += "connector5 sequenceflow \"a6\" g2 e2\n"
-        diag += "connector6 sequenceflow \"a7\" e2 t3\n"
-        diag += "connector7 sequenceflow \"a8\" t3 e3\n"
-
-        return diag;
     }
 }
-

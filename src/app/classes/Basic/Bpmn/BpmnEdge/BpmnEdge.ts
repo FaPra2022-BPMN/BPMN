@@ -28,10 +28,10 @@ export class BpmnEdge extends BEdge implements GetSvgManager {
         this._corners[this._corners.length - 1].setPosXY(x, y);
     }
     removeCorner(at: number) {
-        console.log(' trying to remove ' + at);
+       // console.log(' trying to remove ' + at);
         if (at == 0 || at >= this._corners.length - 1) return;
         this._corners.splice(at, 1);
-        console.log(' removed ' + at);
+        //console.log(' removed ' + at);
         this.svgManager.redraw();
     }
     private readonly _id: string;
@@ -52,8 +52,8 @@ export class BpmnEdge extends BEdge implements GetSvgManager {
         this.from = from;
         this.to = to;
         this._corners = [
-            new BpmnEdgeCorner(from.getPos().x, from.getPos().y),
-            new BpmnEdgeCorner(to.getPos().x, to.getPos().y),
+            new BpmnEdgeCorner(from.getPos().x, from.getPos().y, this),
+            new BpmnEdgeCorner(to.getPos().x, to.getPos().y,this),
         ];
     }
     private _labelStart = '';
@@ -97,14 +97,13 @@ export class BpmnEdge extends BEdge implements GetSvgManager {
         return corner;
     }
     addCorner(pos: Vector, at: number = -1): BpmnEdgeCorner {
-        const corner = new BpmnEdgeCorner(pos.x, pos.y);
+        const corner = new BpmnEdgeCorner(pos.x, pos.y, this);
         this.addCornerr(corner, at);
         return corner;
     }
 
     addDummyCorner(id: string, pos: Vector, at: number = -1): BpmnEdgeCorner {
-        const corner = new BpmnDummyEdgeCorner(id, pos);
-        corner._deletable = false;
+        const corner = new BpmnDummyEdgeCorner(id, pos, this);
         this.addCornerr(corner, at);
         return corner;
     }
