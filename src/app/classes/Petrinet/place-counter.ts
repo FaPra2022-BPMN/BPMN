@@ -1,16 +1,26 @@
 export class PlaceCounter{
 
     private static place_idx: number;
+    private static startEventPlace_idx: number;
 
-    static reset(){
-        PlaceCounter.place_idx = 1
+    static reset(startIndex : number){
+        this.place_idx = startIndex
+        this.startEventPlace_idx = 1
     }
 
     static increment(){
-        PlaceCounter.place_idx++
+        this.place_idx++
+    }
+
+    static incrementStartEventsCounter(){
+        this.startEventPlace_idx++
     }
 
     static get(){
-        return PlaceCounter.place_idx
+        return this.place_idx
+    }
+
+    static getStartEventCounter(){
+        return this.startEventPlace_idx
     }
 }

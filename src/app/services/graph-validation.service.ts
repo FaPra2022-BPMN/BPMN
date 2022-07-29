@@ -21,7 +21,7 @@ export class GraphValidationService {
     // gucken ob man die Fehlermeldungen alle untereinander ausgibt. Evtl errorMessages: string[] und dann ausgeben lassen
     private errorMessage: string = '';
 
-    validateGraph(validateableGraph: ValidateableGraph) {
+    validateGraph(validateableGraph: ValidateableGraph): boolean {
         if (validateableGraph instanceof SwitchableGraph) {
             this.validateSwitchableGraph(validateableGraph.switchNodes);
         }
@@ -31,7 +31,10 @@ export class GraphValidationService {
 
         if (this.errorMessage !== '') {
             this.displayErrorService.displayError(this.errorMessage);
+            return false
         }
+
+        return true
     }
 
     private validateSwitchableGraph(nodes: SwitchableNode[]): void {

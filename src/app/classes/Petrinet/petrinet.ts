@@ -28,12 +28,17 @@ export class Petrinet {
         this.bpmnPetriMap = new Map<BpmnNode, PnSubnet>()
 
         //for adding index to places
-        PlaceCounter.reset()
+        PlaceCounter.reset(this.getNumOfStartEvents(bpmnNodes) + 1)
 
         for (let bpmnNode of bpmnNodes)
             this.addSubnetForEachOutgoingConnection(bpmnNode);
 
         this.connectEachOrSplitWithOrJoin()
+    }
+
+    getNumOfStartEvents(allNodes: Array<BpmnNode>): number{
+        let startEvents = allNodes.filter(node => node instanceof BpmnEventStart)
+        return startEvents.length
     }
 
     connectEachOrSplitWithOrJoin(): void {

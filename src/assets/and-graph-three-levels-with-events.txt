@@ -1,0 +1,33 @@
+.events
+StartEv start "StartEvent" (60,190)
+EndEv end "EndEvent" (1600,190)
+IntermEvent intermediate "IntermEvent" (850,190)
+IntermEvent2 intermediate "IntermEvent2" (1000,190)
+
+.activities
+ServiceTask service "Service"
+ManualTask manual "ManualTask"
+UserTask usertask "UserTask"
+BRTask businessrule "BusinessRule"
+ReceiveTask receiving "ReceiveTask"
+
+.gateways 
+ANDSplit and_split "ANDSplit"
+ANDJoin and_join "ANDJoin"
+
+.sequences
+connector1 sequenceflow "1" StartEv ServiceTask
+connector2 sequenceflow "2" ServiceTask ANDSplit 
+connector3 sequenceflow "3" ANDSplit ManualTask 
+connector4 sequenceflow "4" ANDSplit UserTask
+connector5 sequenceflow "5" ANDSplit IntermEvent2
+connector6 sequenceflow "6" ManualTask IntermEvent
+connector7 sequenceflow "7" IntermEvent2 BRTask
+connector8 sequenceflow "8" BRTask ANDJoin
+connector9 sequenceflow "9" UserTask ANDJoin 
+connector10 sequenceflow "10" IntermEvent ANDJoin
+connector11 sequenceflow "11" ANDJoin ReceiveTask
+connector12 sequenceflow "12" ReceiveTask EndEv
+ 
+
+

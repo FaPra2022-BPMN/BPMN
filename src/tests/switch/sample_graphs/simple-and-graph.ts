@@ -30,7 +30,7 @@ export class SimpleAndGraph extends TestGraph{
          //Task3 --> JOIN_AND gateway
          this.createEdge(task3, gatewayJoinAnd);
  
-         //JOIN_OR gateway --> EndEvent
+         //JOIN_AND gateway --> EndEvent
          let endEvent = this.createEndEvent()
          this.createEdge(gatewayJoinAnd, endEvent);
 
