@@ -37,14 +37,13 @@ export class OutputFieldComponent {
                     return;
                 }
             }; break;
-            case 'bpmn-xml':
+            case 'bpmn-xml':{
                 filetype = ".xml";
                 this.displayErrorService.displayError("XML-Format wird noch implementiert");
                 //todo: textToExport zu XML-Format konvertieren; return entfernen
                 return;
-                break;
+            }
                 case 'pn': {
-                    console.log("Text " + this.text)
     
                     //get BPMN Graph
                     let graph = this.parserService.parse(this.text || "")
@@ -57,6 +56,7 @@ export class OutputFieldComponent {
                     let valid: boolean = this.graphValidationService.validateGraph(graph);
                     if (!valid)
                         return
+                        
                     
                     //convert to petri net
                     textToExport = this.petrinetService.convert(graph);
